@@ -2,7 +2,10 @@
 
 @section('content')
 
-    <h1 class="text-4xl font-bold mb-6">Welcome to the Home Page</h1>
-    <p class="text-lg">This is the main content of the home page.</p>
+    <x-home.hero_section />
+    <x-home.trending_section />
+    <x-home.content_section />
+    {{-- <x-home.featured_section /> --}}
+    <x-home.blog_section />
 
 @endsection
