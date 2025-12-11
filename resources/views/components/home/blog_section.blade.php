@@ -1,53 +1,42 @@
 <section class="blog-section">
     <div class="blog-section__container">
         <div class="blog-section__main">
-            @for ($i = 1; $i <= 6; $i++)
+            @foreach ($mostBuy as $product)
                 <!-- Article -->
                 <article class="blog-section__article">
                     <div class="blog-section__thumbnail">
-                        <a class="blog-section__thumbnail-link" href="/articles/15-ways-to-grow-your-startup">
-                            <img alt="15 Ways to Grow Your Startup" loading="lazy" decoding="async" data-nimg="fill" class="blog-section__thumbnail-image" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(min-width: 1280px) 11rem, (min-width: 1024px) 16vw, (min-width: 768px) 9rem, (min-width: 640px) 30rem, calc(100vw - 2rem)" src="{{ asset('static/images/Manhwa-category.png') }}">
+                        <a class="blog-section__thumbnail-link" href="{{ route('products.show', $product->id) }}">
+                            <img alt="{{ $product->name }}" loading="lazy" decoding="async" data-nimg="fill" class="blog-section__thumbnail-image" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(min-width: 1280px) 11rem, (min-width: 1024px) 16vw, (min-width: 768px) 9rem, (min-width: 640px) 30rem, calc(100vw - 2rem)" src="{{ asset('static/images/Manhwa-category.png') }}">
                         </a>
                     </div>
                     <div class="blog-section__content">
                         <div class="blog-section__content-wrapper">
                             <div>
-                                <a class="blog-section__category" href="/categories/startup">Startup</a>
+                                <a class="blog-section__category" href="#">{{ $product->category->name ?? '' }}</a>
                                 <h3 class="blog-section__title">
-                                    <a href="/articles/15-ways-to-grow-your-startup" class="blog-section__title-link">
-                                        <span aria-hidden="true"></span>15 Ways to Grow Your Startup
+                                    <a href="{{ route('products.show', $product->id) }}" class="blog-section__title-link">
+                                        <span aria-hidden="true"></span>{{ $product->name }}
                                     </a>
                                 </h3>
-                                <p class="blog-section__excerpt">
-                                    Lorem ipsum dolor sit amet tempus bendum labore laoreet.Hendrerit lobortis a leo
-                                    curabitur faucibus sapien ullamcorper do labore odio.
+                                <p class="blog-section__excerpt line-clamp-3">
+                                    {{ $product->description }}
                                 </p>
                             </div>
                             <footer class="blog-section__meta">
-                                <a class="blog-section__meta-avatar" href="/authors/matt-burgess">
-                                    <img alt="Matt Burgess" loading="lazy" decoding="async" data-nimg="fill" class="blog-section__meta-avatar-image" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="2rem" src="{{ asset('static/images/Manhwa-category.png') }}">
-                                </a>
+                                {{-- <a class="blog-section__meta-avatar" href="#">
+                                    <img alt="{{ $product->brand->name ?? '' }}" loading="lazy" decoding="async" data-nimg="fill" class="blog-section__meta-avatar-image" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="2rem" src="{{ asset('static/images/Manhwa-category.png') }}">
+                                </a> --}}
                                 <div class="blog-section__meta-info">
-                                    <span class="blog-section__meta-byline">By&nbsp;</span>
-                                    <a class="blog-section__meta-author" href="/authors/matt-burgess">Matt Burgess</a>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="blog-section__meta-icon">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5">
-                                        </path>
-                                    </svg>
-                                    <time datetime="2022-04-05T10:56:47.000Z" class="blog-section__meta-date">Apr 5,
-                                        2022</time>
-                                    <span class="blog-section__meta-read-time">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="blog-section__meta-read-time-icon">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        <span class="blog-section__meta-read-time-text">12 min read</span>
-                                    </span>
+                                    <a class="blog-section__meta-author" href="#">{{ $product->brand->name ?? '' }}</a>
+                                    {{-- <time datetime="{{ $product->created_at }}" class="blog-section__meta-date">{{ $product->created_at->format('M d, Y') }}</time> --}}
+                                    <span class="mx-2">·</span>
+                                    <span class="text-main-red">{{ $product->price }} USD</span>
                                 </div>
                             </footer>
                         </div>
                     </div>
                 </article>
-            @endfor
+            @endforeach
         </div>
 
         <!-- Sidebar -->
@@ -64,31 +53,30 @@
 
             <!-- Most Read Section -->
             <div class="blog-section__popular">
-                <h3 class="blog-section__popular-title">Most read</h3>
+                <h3 class="blog-section__popular-title">Most view</h3>
                 <div class="blog-section__popular-list">
-                    @for ($i = 1; $i <= 6; $i++)
-                        <!-- Popular Article -->
+                    @foreach ($mostView as $product)
                         <article class="blog-section__popular-item">
-                            <a class="blog-section__popular-thumbnail" href="/articles/pentagon-ufo-report">
-                                <img alt="A Review of the Pentagon UFO Report" loading="lazy" decoding="async" data-nimg="fill" class="blog-section__popular-thumbnail-image" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="16rem" src="{{ asset('static/images/Manhwa-category.png') }}">
+                            <a class="blog-section__popular-thumbnail" href="{{ route('products.show', $product->id) }}">
+                                <img alt="{{ $product->name }}" loading="lazy" decoding="async" data-nimg="fill" class="blog-section__popular-thumbnail-image" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="16rem" src="{{ asset('static/images/Manhwa-category.png') }}">
                             </a>
                             <div class="blog-section__popular-content">
                                 <div class="blog-section__popular-content-wrapper">
                                     <div>
-                                        <a class="blog-section__popular-content-title" href="/articles/pentagon-ufo-report">A Review of the Pentagon UFO Report</a>
+                                        <a class="blog-section__popular-content-title" href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a>
                                     </div>
                                     <div class="blog-section__popular-content-meta">
                                         <div class="blog-section__popular-content-meta-author">
                                             <div class="blog-section__popular-content-meta-author-info">
-                                                <span>By </span>
-                                                <a href="/authors/mark-jack">Mark Jack</a>
+                                                {{-- <span>By </span> --}}
+                                                <a href="#">{{ $product->brand->name ?? '' }}</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </article>
-                    @endfor
+                    @endforeach
                 </div>
             </div>
         </div>

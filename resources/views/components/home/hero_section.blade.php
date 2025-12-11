@@ -1,95 +1,83 @@
 <!--heading page-->
 <section class="hero">
     <div class="hero__container">
+        @php
+            $mainProduct = $products->first();
+            $recentProducts = $products->slice(1, 5);
+        @endphp
+        @if($mainProduct)
         <article class="hero__main-content">
-            <a href="#" class="hero__thumbnail">
-                <img alt="Apple to Turn IPhones Into Payment Terminals in Fintech Push" loading="lazy" decoding="async"
+            <a href="{{ route('products.show', $mainProduct->id) }}" class="hero__thumbnail">
+                <img alt="{{ $mainProduct->name }}" loading="lazy" decoding="async"
                     data-nimg="fill"
                     class="absolute h-full w-full inset-0 object-center object-cover transition-all duration-300 hover:scale-105"
                     style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent"
-                    src="{{ asset('static/images/Manhwa-category.png') }}">
+                    src="{{ $mainProduct->images && is_array($mainProduct->images) && count($mainProduct->images) ? asset($mainProduct->images[0]) : asset('static/images/Manhwa-category.png') }}">
             </a>
             <div class="hero__content">
-                <a href="#" class="hero__tag">Technology</a>
-                <a href="#" class="block mt-3 decoration-inherit">
+                <a href="#" class="hero__tag">{{ $mainProduct->category->name ?? '' }}</a>
+                <a href="{{ route('products.show', $mainProduct->id) }}" class="block mt-3 decoration-inherit">
                     <h2 class="hero__title">
-                        Apple to Turn IPhones Into Payment Terminals in Fintech Push</h2>
+                        {{ $mainProduct->name }}</h2>
                     <div>
-                        <p class="hero__description">Apple Inc. announced that its merchants
-                            will be able to accept credit card and digital payments with just a tap on their
-                            iPhones, enabling them to bypass hardware systems such as those offered by Square
-                            Inc.
-                        </p>
+                        <p class="hero__description">{{ $mainProduct->description ?? '' }}</p>
                     </div>
                 </a>
             </div>
 
             <div class="hero__meta">
-                <a href="#" class="hero__avatar">
-                    <img alt="Apple to Turn IPhones Into Payment Terminals in Fintech Push" loading="lazy"
-                        decoding="async" data-nimg="fill" class="rounded-xl"
-                        style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent"
-                        src="{{ asset('static/images/Manhwa-category.png') }}">
-                </a>
-                <div class="ms-3">
-                    <a href="#" class="hero__author-name">Mark Jack</a>
+                <div class="flex items-center flex-wrap gap-2">
+                    {{-- <a href="#" class="hero__author-name">{{ $mainProduct->brand->name ?? '' }}</a> --}}
                     <p class="hero__publish-time">
-                        <time datetime="2023-10-01T00:00:00Z" class="">October 1, 2023</time>
+                         <a href="#" class="hero__author-name">{{ $mainProduct->brand->name ?? '' }}</a>
+                        {{-- <time datetime="{{ $mainProduct->created_at }}" class="">{{ $mainProduct->created_at->format('F d, Y') }}</time> --}}
                         <span class="mx-0.5">·</span>
-                        <span> <!-- -->6<!-- --> min read </span>
+                        <span class="text-main-red">{{ $mainProduct->price }} USD</span>
                     </p>
                 </div>
             </div>
         </article>
+        @endif
 
         <div class="hero__sidebar">
             <h3 class="section_header">
-                Recent Stories
+                Recent Products
             </h3>
             <div class="hero__stories-list">
-                @for ($i = 1; $i <= 5; $i++)
+                @foreach($recentProducts as $product)
                 <article class="hero__story-item">
-                    <a href="#" class="hero__story-thumbnail">
+                    <a href="{{ route('products.show', $product->id) }}" class="hero__story-thumbnail">
                         <div class="hero__story-thumbnail-container article_img-left">
-                            <img alt="Apple to Turn IPhones Into Payment Terminals in Fintech Push" loading="lazy"
+                            <img alt="{{ $product->name }}" loading="lazy"
                                 decoding="async" data-nimg="fill"
                                 class="absolute h-full w-full inset-0 object-center object-cover transition-all duration-300 hover:scale-105"
                                 style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent"
-                                src="{{ asset('static/images/Manhwa-category.png') }}">
+                                src="{{ $product->images && is_array($product->images) && count($product->images) ? asset($product->images[0]) : asset('static/images/Manhwa-category.png') }}">
                         </div>
                     </a>
                     <div class="hero__story-content">
                         <a href="#" class="hero__story-tag">
-                            Culture
+                            {{ $product->category->name ?? '' }}
                         </a>
-                        <a href="#" class="hero__story-title">
+                        <a href="{{ route('products.show', $product->id) }}" class="hero__story-title">
                             <h3 class="">
-                                What a Four Day Week Actually Looks Like</h3>
+                                {{ $product->name }}</h3>
                         </a>
                         <div class="hero__story-meta">
                             <div class="hero__story-meta-container">
-                                <a href="#" class="hero__story-avatar">
-                                    <img alt="Apple to Turn IPhones Into Payment Terminals in Fintech Push"
-                                        loading="lazy" decoding="async" data-nimg="fill" class=""
-                                        style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent"
-                                        src="{{ asset('static/images/Manhwa-category.png') }}">
-                                </a>
-
                                 <div class="hero__story-author-time">
-                                    <span class="text-[#6b7280]">By </span>
-                                    <a href="#" class="font-medium text-[#374151] hover:underline">Karina
-                                        Bell</a>
+                                    <a href="#" class="font-medium text-[#374151] hover:underline">{{ $product->brand->name ?? '' }}</a>
                                     <span class="xl:inline lg:hidden text-[#6b7280]">
                                         <span class="mx-0.5">·</span>
-                                        <time datetime="2023-10-01T00:00:00Z" class="text-[#6b7280]">October
-                                            1, 2023</time>
+                                        {{-- <time datetime="{{ $product->created_at }}" class="text-[#6b7280]">{{ $product->created_at->format('F d, Y') }}</time> --}}
+                                         <span class="text-main-red">{{ $mainProduct->price }} USD</span>
                                     </span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </article>
-                @endfor
+                @endforeach
             </div>
         </div>
     </div>

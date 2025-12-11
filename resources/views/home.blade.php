@@ -2,10 +2,9 @@
 
 @section('content')
 
-    <x-home.hero_section />
-    <x-home.trending_section />
-    <x-home.content_section />
-    {{-- <x-home.featured_section /> --}}
-    <x-home.blog_section />
+    <x-home.hero_section :products="$products" />
+    <x-home.trending_section :trending="$brands" />
+    <x-home.content_section :productsByCategory="$productsByCategory" :featuredProducts="$featuredProducts" />
+    <x-home.blog_section :mostBuy="$mostBuy" :mostView="$mostView" />
 
 @endsection

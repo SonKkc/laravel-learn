@@ -53,6 +53,18 @@ class ProductForm
                     ->numeric()
                     ->columnSpanFull()
                     ->prefix('$'),
+                TextInput::make('views')
+                    ->label('Views')
+                    ->numeric()
+                    ->default(0)
+                    ->minValue(0)
+                    ->required(),
+                TextInput::make('quantity')
+                    ->label('Quantity')
+                    ->numeric()
+                    ->default(0)
+                    ->minValue(0)
+                    ->required(),
                 Toggle::make('is_active')
                     ->default(true)
                     ->required(),

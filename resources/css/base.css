@@ -1,3 +1,27 @@
+/* Hiệu ứng chuyển đổi hamburger ↔ X cho navbar mobile */
+.navbar-bar {
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s;
+    transform-origin: 12px 12px;
+}
+.navbar-bar.top {
+    transform: none;
+}
+.navbar-bar.middle {
+    opacity: 1;
+    transform: none;
+}
+.navbar-bar.bottom {
+    transform: none;
+}
+.navbar-mobile-open .navbar-bar.top {
+    transform: translateX(-4.5px) translateY(4.5px) rotate(45deg);
+}
+.navbar-mobile-open .navbar-bar.middle {
+    opacity: 0;
+}
+.navbar-mobile-open .navbar-bar.bottom {
+    transform: translateX(-4.5px) translateY(-4.5px) rotate(-45deg);
+}
 body {
     font-family: "Roboto Flex", sans-serif;
     margin: 0;
@@ -554,7 +578,7 @@ body {
     @apply absolute inset-0;
 }
 .blog-section__excerpt {
-    @apply mt-3.5 block text-base leading-relaxed text-gray-500;
+    @apply mt-3.5 text-base leading-relaxed text-gray-500;
 }
 .blog-section__meta {
     @apply mt-5 flex items-center;
