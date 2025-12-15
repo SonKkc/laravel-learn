@@ -51,6 +51,10 @@ body {
     @apply lg:max-w-[1536px] md:px-8 sm:px-6 sm:max-w-[48rem] px-4 mx-auto max-w-[36rem];
 }
 
+.container_md{
+    @apply max-w-[80rem] px-[2rem] mx-auto sm:px-[1rem];
+}
+
 .section_header {
     @apply text-2xl font-medium pb-2.5 border-b border-[#d1d5dbb3] relative after:w-24 after:h-px after:absolute after:left-0 after:bottom-[-1px] after:bg-red-600;
 }
@@ -775,4 +779,15 @@ body {
 }
 .blog-section__popular-content-meta-author-info a {
     @apply font-medium text-gray-700 hover:underline;
+}
+
+.hide-scrollbar {
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }

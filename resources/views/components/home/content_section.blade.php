@@ -12,42 +12,7 @@
 
                 <div class="content__cards !mt-0">
                     @foreach ($productsByCategory as $categoryName => $product)
-                    <article class="content__card">
-                        <div class="content__thumbnail">
-                            <a href="{{ route('products.show', $product->id) }}" class="">
-                                <img alt="{{ $product->name }}" loading="lazy"
-                                    decoding="async" data-nimg="fill"
-                                    class="absolute h-full w-full inset-0 object-center object-cover transition-all duration-300"
-                                    style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent"
-                                    src="{{ asset('static/images/Manhwa-category.png') }}">
-                            </a>
-                        </div>
-                        <div class="content__card-content">
-                            <div>
-                                <a href="#" class="content__card-tag">{{ $categoryName }}</a>
-                                <a href="{{ route('products.show', $product->id) }}" class="content__card-title">
-                                    <h3>{{ $product->name }}</h3>
-                                </a>
-                                <p class="content__card-description line-clamp-4">{{ $product->description }}</p>
-                            </div>
-                            <div class="content__card-meta">
-                                {{-- <a href="#" class="content__card-avatar">
-                                    <img alt="{{ $product->name }}"
-                                        loading="lazy" decoding="async" data-nimg="fill" class="rounded-xl"
-                                        style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent"
-                                        src="{{ asset('static/images/Manhwa-category.png') }}">
-                                </a> --}}
-                                <div class="ms-3">
-                                    <a href="#" class="content__card-author">{{ $product->brand->name ?? '' }}</a>
-                                    <p class="content__card-time">
-                                        <time datetime="{{ $product->created_at }}" class="">{{ $product->created_at->format('F d, Y') }}</time>
-                                        <span class="mx-0.5">·</span>
-                                        <span class="text-main-red">{{ $product->price }} USD</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
+                    <x-product-card :product="$product" :categoryName="$categoryName" />
                     @endforeach
                 </div>
             </div>
