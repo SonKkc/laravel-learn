@@ -6,7 +6,13 @@
                 <article class="blog-section__article">
                     <div class="blog-section__thumbnail">
                         <a class="blog-section__thumbnail-link" href="{{ route('products.show', $product->id) }}">
-                            <img alt="{{ $product->name }}" loading="lazy" decoding="async" data-nimg="fill" class="blog-section__thumbnail-image" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(min-width: 1280px) 11rem, (min-width: 1024px) 16vw, (min-width: 768px) 9rem, (min-width: 640px) 30rem, calc(100vw - 2rem)" src="{{ asset('static/images/Manhwa-category.png') }}">
+                            @php
+                                $imgSrc = null;
+                                if (is_array($product->images) && !empty($product->images[0])) {
+                                    $imgSrc = asset('storage/' . ltrim($product->images[0], '/'));
+                                }
+                            @endphp
+                            <img alt="{{ $product->name }}" loading="lazy" decoding="async" data-nimg="fill" class="blog-section__thumbnail-image" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(min-width: 1280px) 11rem, (min-width: 1024px) 16vw, (min-width: 768px) 9rem, (min-width: 640px) 30rem, calc(100vw - 2rem)" src="{{ $imgSrc ?? asset('static/images/Manhwa-category.png') }}">
                         </a>
                     </div>
                     <div class="blog-section__content">
@@ -58,7 +64,13 @@
                     @foreach ($mostView as $product)
                         <article class="blog-section__popular-item">
                             <a class="blog-section__popular-thumbnail" href="{{ route('products.show', $product->id) }}">
-                                <img alt="{{ $product->name }}" loading="lazy" decoding="async" data-nimg="fill" class="blog-section__popular-thumbnail-image" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="16rem" src="{{ asset('static/images/Manhwa-category.png') }}">
+                                @php
+                                    $imgSrc = null;
+                                    if (is_array($product->images) && !empty($product->images[0])) {
+                                        $imgSrc = asset('storage/' . ltrim($product->images[0], '/'));
+                                    }
+                                @endphp
+                                <img alt="{{ $product->name }}" loading="lazy" decoding="async" data-nimg="fill" class="blog-section__popular-thumbnail-image" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="16rem" src="{{ $imgSrc ?? asset('static/images/Manhwa-category.png') }}">
                             </a>
                             <div class="blog-section__popular-content">
                                 <div class="blog-section__popular-content-wrapper">

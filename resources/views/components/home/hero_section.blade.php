@@ -8,11 +8,17 @@
         @if($mainProduct)
         <article class="hero__main-content">
             <a href="{{ route('products.show', $mainProduct->id) }}" class="hero__thumbnail">
+                @php
+                    $mainImg = null;
+                    if ($mainProduct->images && is_array($mainProduct->images) && !empty($mainProduct->images[0])) {
+                        $mainImg = asset('storage/' . ltrim($mainProduct->images[0], '/'));
+                    }
+                @endphp
                 <img alt="{{ $mainProduct->name }}" loading="lazy" decoding="async"
                     data-nimg="fill"
                     class="absolute h-full w-full inset-0 object-center object-cover transition-all duration-300 hover:scale-105"
                     style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent"
-                    src="{{ $mainProduct->images && is_array($mainProduct->images) && count($mainProduct->images) ? asset($mainProduct->images[0]) : asset('static/images/Manhwa-category.png') }}">
+                    src="{{ $mainImg ?? asset('static/images/Manhwa-category.png') }}">
             </a>
             <div class="hero__content">
                 <a href="#" class="hero__tag">{{ $mainProduct->category->name ?? '' }}</a>
@@ -48,11 +54,17 @@
                 <article class="hero__story-item">
                     <a href="{{ route('products.show', $product->id) }}" class="hero__story-thumbnail">
                         <div class="hero__story-thumbnail-container article_img-left">
+                            @php
+                                $recentImg = null;
+                                if ($product->images && is_array($product->images) && !empty($product->images[0])) {
+                                    $recentImg = asset('storage/' . ltrim($product->images[0], '/'));
+                                }
+                            @endphp
                             <img alt="{{ $product->name }}" loading="lazy"
                                 decoding="async" data-nimg="fill"
                                 class="absolute h-full w-full inset-0 object-center object-cover transition-all duration-300 hover:scale-105"
                                 style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent"
-                                src="{{ $product->images && is_array($product->images) && count($product->images) ? asset($product->images[0]) : asset('static/images/Manhwa-category.png') }}">
+                                src="{{ $recentImg ?? asset('static/images/Manhwa-category.png') }}">
                         </div>
                     </a>
                     <div class="hero__story-content">

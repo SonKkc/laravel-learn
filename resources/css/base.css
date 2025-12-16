@@ -67,7 +67,7 @@ body {
     @apply relative z-10 border-b border-[#d1d5db99];
 }
 .navbar__nav {
-    @apply max-w-[80rem] h-[5rem] flex mx-auto items-center bg-white px-[2rem] sm:px-[1rem];
+    @apply lg:max-w-[1536px] max-w-2xl h-20 flex mx-auto items-center bg-white px-[2rem] sm:px-[1rem];
 }
 .navbar__container {
     @apply flex w-full items-center justify-between;
@@ -88,10 +88,10 @@ body {
     @apply text-[#1f2937] font-medium text-[1.063rem] py-[0.25rem] px-[0.75rem] no-underline transition-all duration-300 hover:text-[#b91c1c];
 }
 .navbar__search {
-    @apply max-w-[16rem] w-full h-[2.5rem] ms-[1.5rem] relative;
+    @apply h-[2.5rem] ms-[1.5rem] relative;
 }
 .navbar__search-form {
-    @apply rounded-[1.5rem];
+    @apply rounded-[1.5rem] max-w-[16rem] w-full;
 }
 .navbar__search-icon-wrapper {
     @apply absolute inset-0 left-[0.75rem] flex items-center w-min;

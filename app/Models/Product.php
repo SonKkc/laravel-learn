@@ -15,11 +15,13 @@ class Product extends Model
         'images' => 'array',
     ];
 
-    public function category(){
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
 
-    public function brand(){
+    public function brand()
+    {
         return $this->belongsTo(Brand::class);
     }
 
@@ -28,5 +30,10 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-
+    protected static function booted()
+    {
+        static::saving(function ($product) {
+            $product->in_stock = $product->quantity > 0;
+        });
+    }
 }

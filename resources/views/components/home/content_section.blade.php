@@ -27,11 +27,17 @@
                     @foreach($featuredProducts as $product)
                     <article class="content__feature-card">
                         <a href="{{ route('products.show', $product->id) }}" class="content__feature-thumbnail">
+                            @php
+                                $imgSrc = null;
+                                if (is_array($product->images) && !empty($product->images[0])) {
+                                    $imgSrc = asset('storage/' . ltrim($product->images[0], '/'));
+                                }
+                            @endphp
                             <img alt="{{ $product->name }}" loading="lazy"
                                 decoding="async" data-nimg="fill"
                                 class="absolute h-full w-full inset-0 object-center object-cover transition-all duration-300 hover:scale-105"
                                 style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent"
-                                src="{{ asset('static/images/Manhwa-category.png') }}">
+                                src="{{ $imgSrc ?? asset('static/images/Manhwa-category.png') }}">
                         </a>
                         <div class="content__feature-content">
                             <div class="content__feature-wrapper">

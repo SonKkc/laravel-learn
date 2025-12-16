@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -39,3 +40,8 @@ Route::get('/reset', [AuthController::class, 'resetForm'])->name('reset');
 // Payment result
 Route::get('/success', [CheckoutController::class, 'success'])->name('checkout.success');
 Route::get('/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+
+// User Profile
+Route::get('/profile', function () {
+    return view('profile.show');
+})->middleware('auth')->name('profile.show');

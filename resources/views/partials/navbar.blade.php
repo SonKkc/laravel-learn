@@ -1,4 +1,4 @@
-<header class="navbar fixed top-0 left-0 w-full z-50 bg-white shadow">
+<header class="navbar fixed left-0 top-0 z-50 w-full bg-white shadow">
     <div class="navbar__border">
         <nav class="navbar__nav">
             <div class="navbar__container">
@@ -13,10 +13,10 @@
                 </div>
                 <!--Nav item-->
                 <div class="navbar__menu">
-                        <a href="{{ route('categories.index') }}" class="navbar__menu-item">Categories</a>
-                        <a href="{{ route('products.index') }}" class="navbar__menu-item">Products</a>
-                        <a href="{{ route('cart.index') }}" class="navbar__menu-item">Cart</a>
-                        <a href="{{ route('orders.my') }}" class="navbar__menu-item">My Orders</a>
+                    <a href="{{ route('categories.index') }}" class="navbar__menu-item">Categories</a>
+                    <a href="{{ route('products.index') }}" class="navbar__menu-item">Products</a>
+                    <a href="{{ route('cart.index') }}" class="navbar__menu-item">Cart</a>
+                    <a href="{{ route('orders.my') }}" class="navbar__menu-item">My Orders</a>
                 </div>
                 <!-- search-->
                 <div class="navbar__search flex items-center gap-2">
@@ -28,15 +28,66 @@
                         </div>
                         <input class="navbar__search-input" name="search" placeholder="Search...">
                     </form>
-                    <a href="/login" class="ml-2 px-4 py-2 rounded-full bg-main-red text-white font-semibold shadow hover:bg-main-red-hover transition-color duration-200 ease-out">Login</a>
+                    @auth
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open" @keydown.escape="open = false" type="button" class="bg-main-red hover:bg-main-red-hover flex items-center gap-2 rounded-full px-4 py-2 font-semibold text-white shadow transition-all duration-200 focus:outline-none active:scale-95">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 text-white">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                </svg>
+                                <span class="font-semibold">{{ Auth::user()->name }}</span>
+                                <svg class="ml-1 h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2 scale-95" x-transition:enter-end="opacity-100 translate-y-0 scale-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0 scale-100" x-transition:leave-end="opacity-0 translate-y-2 scale-95" @click.away="open = false" class="absolute right-0 z-50 mt-2 w-64 max-w-xs origin-top-right rounded-xl bg-white py-2 shadow-xl ring-1 ring-black/10" x-cloak>
+                                <div class="flex items-center gap-3 border-b px-4 py-4">
+                                    <span class="bg-main-red/10 inline-flex h-11 w-11 items-center justify-center rounded-full">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-main-red h-7 w-7">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                        </svg>
+                                    </span>
+                                    <div class="flex min-w-0 flex-col">
+                                        <span class="whitespace-normal break-all text-base font-semibold text-gray-900">{{ Auth::user()->name }}</span>
+                                        <span class="whitespace-normal break-all text-xs text-gray-500">{{ Auth::user()->email }}</span>
+                                    </div>
+                                </div>
+                                <a href="{{ route('profile.show') }}" class="flex items-center gap-2 rounded-lg px-4 py-3 font-medium text-gray-700 transition hover:bg-gray-50">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-main-red h-5 w-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                    </svg>
+                                    <span>Hồ sơ cá nhân</span>
+                                </a>
+                                <form method="POST" action="{{ route('logout') }}" class="mt-1">
+                                    @csrf
+                                    <button type="submit" class="text-main-red flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left font-semibold transition hover:bg-gray-50">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                        Đăng xuất
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @else
+                        <a href="/login" class="bg-main-red hover:bg-main-red-hover ml-2 rounded-full px-4 py-2 font-semibold text-white shadow transition-all duration-200">Login</a>
+                        <form method="POST" action="{{ route('logout') }}" class="mt-1">
+                            @csrf
+                            <button type="submit" class="text-main-red flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left font-semibold transition hover:bg-gray-50">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                Đăng xuất
+                            </button>
+                        </form>
+                    @endauth
                 </div>
 
                 <button id="navbar-mobile-toggle" class="ml-2 flex items-center justify-center rounded-full bg-gray-50 p-2 shadow-sm ring-1 ring-gray-900/5 transition duration-300 ease-in-out hover:bg-gray-100 focus:outline-none md:hidden" type="button" aria-label="Open menu">
                     <span class="relative block">
                         <svg id="navbar-mobile-icon" class="h-7 w-7 text-gray-700 transition-all duration-300 ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path class="navbar-bar top" d="M4 6h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path class="navbar-bar middle" d="M4 12h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path class="navbar-bar bottom" d="M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path class="navbar-bar top" d="M4 6h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <path class="navbar-bar middle" d="M4 12h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <path class="navbar-bar bottom" d="M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                         </svg>
                     </span>
                 </button>
@@ -46,21 +97,11 @@
     <div id="navbar-mobile-menu" class="w-full md:hidden">
         <nav class="border-b border-gray-300/60 bg-white" aria-label="Global" id="mobile-menu">
             <div class="space-y-1 px-2 pb-3 pt-2">
-                <a href="{{ route('categories.index') }}" class="block rounded-lg font-medium px-4 py-3 text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">Categories</a>
-                <a href="{{ route('products.index') }}" class="block rounded-lg font-medium px-4 py-3 text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">Products</a>
-                <a href="{{ route('cart.index') }}" class="block rounded-lg font-medium px-4 py-3 text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">Cart</a>
-                <a href="{{ route('orders.my') }}" class="block rounded-lg font-medium px-4 py-3 text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">My Orders</a>
+                <a href="{{ route('categories.index') }}" class="block rounded-lg px-4 py-3 font-medium text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">Categories</a>
+                <a href="{{ route('products.index') }}" class="block rounded-lg px-4 py-3 font-medium text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">Products</a>
+                <a href="{{ route('cart.index') }}" class="block rounded-lg px-4 py-3 font-medium text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">Cart</a>
+                <a href="{{ route('orders.my') }}" class="block rounded-lg px-4 py-3 font-medium text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">My Orders</a>
             </div>
-            {{-- <div class="border-t border-gray-300/70 pb-4 pt-4 px-3">
-                <div class="mt-2 px-6 text-xs font-medium uppercase tracking-widest text-gray-500">Pages</div>
-                <div class="mt-3 space-y-1 px-2 text-[15px]">
-                        <a href="{{ url('/') }}" class="block rounded-lg font-medium px-4 py-2 bg-gray-50 text-red-700">Home</a>
-                        <a href="{{ route('categories.index') }}" class="block rounded-lg font-medium px-4 py-2 text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">Categories</a>
-                        <a href="{{ route('products.index') }}" class="block rounded-lg font-medium px-4 py-2 text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">Products</a>
-                        <a href="{{ route('cart.index') }}" class="block rounded-lg font-medium px-4 py-2 text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">Cart</a>
-                        <a href="{{ route('orders.my') }}" class="block rounded-lg font-medium px-4 py-2 text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">My Orders</a>
-                </div>
-            </div> --}}
         </nav>
     </div>
 </header>

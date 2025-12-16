@@ -29,6 +29,7 @@ class CategoryForm
                     ->readOnly(),
 
                 FileUpload::make('image')
+                    ->disk('public')
                     ->image()
                     ->directory('categories')
                     ->columnSpanFull(),

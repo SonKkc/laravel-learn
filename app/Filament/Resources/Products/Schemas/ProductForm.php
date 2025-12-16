@@ -40,7 +40,9 @@ class ProductForm
                     ->unique(table: 'products', column: 'slug', ignoreRecord: true)
                     ->required(),
                 FileUpload::make('images')
+                    ->disk('public')
                     ->image()
+                    ->multiple()
                     ->directory('products')
                     ->maxFiles(5)
                     ->reorderable()

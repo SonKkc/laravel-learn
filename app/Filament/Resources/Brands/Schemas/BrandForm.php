@@ -25,13 +25,14 @@ class BrandForm
 
                 TextInput::make('slug')
                     ->maxLength(255)
-                    ->unique(table: 'categories', column: 'slug', ignoreRecord: true)
+                    ->unique(table: 'brands', column: 'slug', ignoreRecord: true)
                     ->required()
                     ->readOnly(),
 
                 FileUpload::make('image')
+                    ->disk('public')
                     ->image()
-                    ->directory('categories')
+                    ->directory('brands')
                     ->columnSpanFull(),
 
                 Toggle::make('is_active')

@@ -2,6 +2,9 @@
 namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use \App\Models\Category;
+use \App\Models\Brand;
 class ProductController extends Controller {
     public function index(Request $request) {
         $query = Product::with(['brand', 'category'])->where('is_active', true);
@@ -25,7 +28,7 @@ class ProductController extends Controller {
                 $query->orderBy('price', 'desc');
                 break;
             case 'best_seller':
-                $query->withCount(['orderItems as total_sold' => function($q) { $q->select(\DB::raw('SUM(quantity)')); }])
+                $query->withCount(['orderItems as total_sold' => function($q) { $q->select(DB::raw('SUM(quantity)')); }])
                       ->orderByDesc('total_sold');
                 break;
             case 'newest':
@@ -35,8 +38,8 @@ class ProductController extends Controller {
 
         $products = $query->paginate(12);
 
-        $categories = \App\Models\Category::where('is_active', true)->get();
-        $brands = \App\Models\Brand::where('is_active', true)->get();
+        $categories = Category::where('is_active', true)->get();
+        $brands = Brand::where('is_active', true)->get();
 
         return view('products.index', compact('products', 'categories', 'brands'));
     }

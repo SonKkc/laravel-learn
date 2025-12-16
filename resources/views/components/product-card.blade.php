@@ -1,7 +1,16 @@
 <article class="content__card">
     <div class="content__thumbnail">
         <a href="{{ route('products.show', $product->id) }}" class="">
-            <img alt="{{ $product->name }}" loading="lazy" decoding="async" data-nimg="fill" class="absolute inset-0 h-full w-full object-cover object-center transition-all duration-300" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" src="{{ asset('static/images/Manhwa-category.png') }}">
+            @php
+                $imgSrc = null;
+                if (is_array($product->images) && !empty($product->images) && $product->images[0]) {
+                    $imgSrc = asset('storage/' . ltrim($product->images[0], '/'));
+                }
+            @endphp
+            <img alt="{{ $product->name }}" loading="lazy" decoding="async" data-nimg="fill"
+                class="absolute inset-0 h-full w-full object-cover object-center transition-all duration-300"
+                style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent"
+                src="{{ $imgSrc ?? asset('static/images/Manhwa-category.png') }}">
         </a>
     </div>
     <div class="content__card-content">
