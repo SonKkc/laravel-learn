@@ -88,7 +88,7 @@
                         <span class="text-sm text-gray-500">Kho: <span class="font-semibold text-gray-700">{{ $product->in_stock ? 'Còn hàng' : 'Hết hàng' }}</span></span>
                         <span class="text-sm text-gray-500">Số lượng: <span class="font-semibold text-gray-700">{{ $product->quantity ?? 0 }}</span></span>
                     </div>
-                    <form class="flex items-center gap-4" x-data="{ qty: 1, min: 1, max: {{ $product->quantity ?? 99 }} }">
+                    <form class="flex items-center gap-4" x-data="{ qty: 1, min: 1, max: {{ $product->quantity ?? 99 }}, _added: false }">
                         <template x-if="max > 0">
                             <div class="flex flex-col gap-3 w-full">
                                 <div class="flex items-center justify-between w-full">
@@ -100,7 +100,7 @@
                                     </div>
                                     <span class="ml-4 text-sm text-gray-500">Kho: <span class="font-semibold text-main-red">{{ $product->quantity }}</span></span>
                                 </div>
-                                <button type="button"
+                                <button type="button" data-add-to-cart data-product-id="{{ $product->id }}" data-cart-url="{{ route('cart.add') }}"
                                     class="w-full bg-main-red hover:bg-main-red-hover rounded-full px-6 py-3 font-bold text-white shadow-lg text-lg tracking-wide
                                     transition-all duration-300 ease-out hover:scale-103 hover:shadow-xl
                                     focus-visible:outline-none active:scale-95">
@@ -114,6 +114,43 @@
                             </div>
                         </template>
                     </form>
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        document.querySelectorAll('[data-add-to-cart]').forEach(function (btn) {
+                            btn.addEventListener('click', async function (e) {
+                                const productId = btn.dataset.productId;
+                                const url = btn.dataset.cartUrl;
+                                // find quantity input inside the same form
+                                const form = btn.closest('form');
+                                let qty = 1;
+                                if (form) {
+                                    const input = form.querySelector('input[name="quantity"]');
+                                    if (input) qty = parseInt(input.value) || 1;
+                                }
+                                try {
+                                    btn.disabled = true;
+                                    const data = await window.cartAdd({ url: url, product_id: productId, quantity: qty });
+                                    if (data && data.success) {
+                                        try {
+                                            const dropdown = document.querySelector('[x-html]');
+                                            if (dropdown && data.html) dropdown.innerHTML = data.html;
+                                            document.querySelectorAll('[data-cart-badge]').forEach(function (b) { b.textContent = data.count; });
+                                        } catch (err) { console.warn(err); }
+                                        const original = btn.innerHTML;
+                                        btn.innerHTML = 'Đã thêm';
+                                        // show toast with quantity info
+                                        if (window.showToast) window.showToast(`đã thêm ${qty} vào giỏ hàng`);
+                                        setTimeout(function () { btn.innerHTML = original; }, 1000);
+                                    }
+                                } catch (err) {
+                                    console.error(err);
+                                } finally {
+                                    btn.disabled = false;
+                                }
+                            });
+                        });
+                    });
+                    </script>
                 </div>
             </div>
         </div>

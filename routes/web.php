@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -8,6 +7,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
 
 
 // Home
@@ -23,6 +23,11 @@ Route::get('/products/{product}', [ProductController::class, 'show'])->name('pro
 
 // Cart
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/cart/preview', [CartController::class, 'preview'])->name('cart.preview');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+Route::get('/cart/json', [CartController::class, 'json'])->name('cart.json');
 
 // Checkout
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
@@ -42,6 +47,4 @@ Route::get('/success', [CheckoutController::class, 'success'])->name('checkout.s
 Route::get('/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
 
 // User Profile
-Route::get('/profile', function () {
-    return view('profile.show');
-})->middleware('auth')->name('profile.show');
+Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile.show');

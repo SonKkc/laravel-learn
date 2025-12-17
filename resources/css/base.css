@@ -82,7 +82,7 @@ body {
     @apply object-cover h-[2.25rem];
 }
 .navbar__menu {
-    @apply flex items-center justify-between max-sm:hidden ms-[1.5rem] leading-[1.5rem] text-[1rem];
+    @apply flex items-center justify-between max-md:hidden ms-[1.5rem] leading-[1.5rem] text-[1rem];
 }
 .navbar__menu-item {
     @apply text-[#1f2937] font-medium text-[1.063rem] py-[0.25rem] px-[0.75rem] no-underline transition-all duration-300 hover:text-[#b91c1c];

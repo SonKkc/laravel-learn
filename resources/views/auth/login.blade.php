@@ -10,12 +10,26 @@
             <h2 class="text-2xl font-bold text-gray-900 mb-1">Đăng nhập</h2>
             <p class="text-gray-500 text-sm">Chào mừng bạn quay lại!</p>
         </div>
+
+        @if ($errors->any())
+            <div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-500">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('login') }}" class="space-y-5">
             @csrf
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                 <input id="email" type="email" name="email" required autofocus autocomplete="email"
-                    class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-gray-900 focus:border-main-red focus:ring-2 focus:ring-main-red/30 focus:outline-none transition" />
+                    class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-gray-900 focus:border-main-red focus:ring-2 focus:ring-main-red/30 focus:outline-none transition @error('email') border-red-500 @enderror" />
+                @error('email')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
             </div>
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>

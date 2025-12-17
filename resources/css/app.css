@@ -16,3 +16,4 @@
     --color-main-red-hover: #DC2626;
 }
 
+[x-cloak] { display: none !important; }
