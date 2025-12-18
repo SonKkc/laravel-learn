@@ -12,6 +12,7 @@ use App\Models\OrderItem;
 use App\Models\Address;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class SeederDemo extends Seeder
 {
@@ -36,9 +37,9 @@ class SeederDemo extends Seeder
             'is_active' => true,
         ]));
 
-        // Brands (tối thiểu 5)
+        // Brands (tối thiểu 8)
         $brandNames = [
-            'Apple', 'Samsung', 'Nike', 'Adidas', 'Sony',
+            'Apple', 'Samsung', 'Nike', 'Adidas', 'Sony', 'Amazon', 'IKEA', 'Dyson',
         ];
         $brands = collect($brandNames)->map(fn($name) => Brand::firstOrCreate([
             'slug' => Str::slug($name)
@@ -47,7 +48,7 @@ class SeederDemo extends Seeder
             'is_active' => true,
         ]));
 
-        // Products (tối thiểu 20)
+        // Products (base list, we'll also generate additional demo products)
         $productSeed = [
             ['iPhone 15', 'Electronics', 'Apple', 999],
             ['Galaxy S25', 'Electronics', 'Samsung', 899],
@@ -75,8 +76,9 @@ class SeederDemo extends Seeder
             $category = $categories->firstWhere('name', $catName);
             $brand = $brands->firstWhere('name', $brandName) ?? $brands->first();
             $description = 'Sản phẩm ' . $name . ' là lựa chọn tuyệt vời trong danh mục ' . $catName . ' của hãng ' . $brandName . '. Với thiết kế hiện đại, chất lượng đảm bảo và giá thành hợp lý, sản phẩm này đáp ứng tốt nhu cầu sử dụng hàng ngày cũng như các mục đích chuyên dụng. Được sản xuất bởi thương hiệu uy tín, ' . $name . ' mang lại trải nghiệm vượt trội cho người dùng. Hãy khám phá ngay để tận hưởng những tính năng nổi bật và ưu đãi hấp dẫn.';
-            return Product::firstOrCreate([
-                'slug' => Str::slug($name)
+            $slug = Str::slug($name);
+            $product = Product::firstOrCreate([
+                'slug' => $slug
             ], [
                 'name' => $name,
                 'category_id' => $category ? $category->id : $categories->first()->id,
@@ -84,8 +86,50 @@ class SeederDemo extends Seeder
                 'price' => $price,
                 'is_active' => true,
                 'description' => $description,
+                'quantity' => rand(5, 100),
             ]);
+
+            // If product has no images, try to use images already present in repo under public/static/images
+            if (empty($product->images) || count($product->images) === 0) {
+                try {
+                    $pattern = public_path('static/images/*.{jpg,jpeg,png,gif}');
+                    $found = glob($pattern, GLOB_BRACE);
+                    if (!empty($found)) {
+                        // pick a random file from public/static/images
+                        $pick = $found[array_rand($found)];
+                        // store relative path from public (used with asset('static/...'))
+                        $relative = 'static/images/' . basename($pick);
+                        $product->images = [$relative];
+                        $product->save();
+                    }
+                } catch (\Exception $e) {
+                    // ignore errors in seeder
+                }
+            }
+
+            return $product;
         });
+
+        // Generate additional demo products to reach ~50 items
+        $extraToCreate = 30;
+        for ($i = 1; $i <= $extraToCreate; $i++) {
+            $cat = $categories->random();
+            $brand = $brands->random();
+            $name = $brand->name . ' Product ' . (100 + $i);
+            $price = rand(10, 2000);
+            $description = 'Demo sản phẩm ' . $name . ' thuộc danh mục ' . $cat->name . ' của hãng ' . $brand->name . '. Thông tin mô tả demo.';
+            $products->push(Product::firstOrCreate([
+                'slug' => Str::slug($name)
+            ], [
+                'name' => $name,
+                'category_id' => $cat->id,
+                'brand_id' => $brand->id,
+                'price' => $price,
+                'is_active' => true,
+                'description' => $description,
+                'quantity' => rand(5, 200),
+            ]));
+        }
 
         // Orders + OrderItems + Addresses
         for ($i = 1; $i <= 3; $i++) {

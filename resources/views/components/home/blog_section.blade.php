@@ -9,7 +9,8 @@
                             @php
                                 $imgSrc = null;
                                 if (is_array($product->images) && !empty($product->images[0])) {
-                                    $imgSrc = asset('storage/' . ltrim($product->images[0], '/'));
+                                    $img = $product->images[0] ?? '';
+                                    $imgSrc = \Illuminate\Support\Str::startsWith($img, 'static/') ? asset($img) : asset('storage/' . ltrim($img, '/'));
                                 }
                             @endphp
                             <img alt="{{ $product->name }}" loading="lazy" decoding="async" data-nimg="fill" class="blog-section__thumbnail-image" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(min-width: 1280px) 11rem, (min-width: 1024px) 16vw, (min-width: 768px) 9rem, (min-width: 640px) 30rem, calc(100vw - 2rem)" src="{{ $imgSrc ?? asset('static/images/Manhwa-category.png') }}">
@@ -67,7 +68,8 @@
                                 @php
                                     $imgSrc = null;
                                     if (is_array($product->images) && !empty($product->images[0])) {
-                                        $imgSrc = asset('storage/' . ltrim($product->images[0], '/'));
+                                        $img = $product->images[0] ?? '';
+                                        $imgSrc = \Illuminate\Support\Str::startsWith($img, 'static/') ? asset($img) : asset('storage/' . ltrim($img, '/'));
                                     }
                                 @endphp
                                 <img alt="{{ $product->name }}" loading="lazy" decoding="async" data-nimg="fill" class="blog-section__popular-thumbnail-image" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="16rem" src="{{ $imgSrc ?? asset('static/images/Manhwa-category.png') }}">

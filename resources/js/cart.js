@@ -96,7 +96,16 @@ export async function cartPerformUpdate(opts) {
         if (data && data.success) {
             const dropdown = document.querySelector('[x-html]');
             if (dropdown && data.html) dropdown.innerHTML = data.html;
-            document.querySelectorAll('[data-cart-badge]').forEach(function (b) { b.textContent = data.count; });
+            // Update or remove badges depending on count
+            document.querySelectorAll('[data-cart-badge]').forEach(function (b) {
+                if ((data.count || 0) > 0) {
+                    b.textContent = data.count;
+                    b.style.display = '';
+                } else {
+                    // remove stale badge
+                    b.remove();
+                }
+            });
             if (window.showToast) window.showToast('Cập nhật giỏ hàng');
         }
         return data;
@@ -113,7 +122,15 @@ export async function cartPerformRemove(opts) {
         if (data && data.success) {
             const dropdown = document.querySelector('[x-html]');
             if (dropdown && data.html) dropdown.innerHTML = data.html;
-            document.querySelectorAll('[data-cart-badge]').forEach(function (b) { b.textContent = data.count; });
+            // Update or remove badges depending on count
+            document.querySelectorAll('[data-cart-badge]').forEach(function (b) {
+                if ((data.count || 0) > 0) {
+                    b.textContent = data.count;
+                    b.style.display = '';
+                } else {
+                    b.remove();
+                }
+            });
             if (window.showToast) window.showToast('Đã xoá khỏi giỏ hàng');
         }
         return data;

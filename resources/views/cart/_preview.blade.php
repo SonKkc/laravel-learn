@@ -9,7 +9,11 @@
                 <li class="flex items-center justify-between py-2">
                     <a href="{{ route('products.show', $item['id']) }}" class="flex min-w-0 items-center gap-3 text-sm text-gray-900 hover:underline">
                         @if(!empty($item['image']))
-                            <img src="{{ asset('storage/'.$item['image']) }}" class="h-10 w-10 rounded object-cover" alt="{{ $item['name'] }}">
+                            @php
+                                $img = $item['image'] ?? '';
+                                $imgSrc = \Illuminate\Support\Str::startsWith($img, 'static/') ? asset($img) : asset('storage/' . ltrim($img, '/'));
+                            @endphp
+                            <img src="{{ $imgSrc }}" class="h-10 w-10 rounded object-cover" alt="{{ $item['name'] }}">
                         @endif
                         <div class="min-w-0">
                             <div class="truncate font-medium">{{ $item['name'] ?? 'Sản phẩm' }}</div>

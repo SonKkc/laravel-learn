@@ -11,7 +11,8 @@
                 @php
                     $mainImg = null;
                     if ($mainProduct->images && is_array($mainProduct->images) && !empty($mainProduct->images[0])) {
-                        $mainImg = asset('storage/' . ltrim($mainProduct->images[0], '/'));
+                        $img = $mainProduct->images[0] ?? '';
+                        $mainImg = \Illuminate\Support\Str::startsWith($img, 'static/') ? asset($img) : asset('storage/' . ltrim($img, '/'));
                     }
                 @endphp
                 <img alt="{{ $mainProduct->name }}" loading="lazy" decoding="async"
@@ -57,7 +58,8 @@
                             @php
                                 $recentImg = null;
                                 if ($product->images && is_array($product->images) && !empty($product->images[0])) {
-                                    $recentImg = asset('storage/' . ltrim($product->images[0], '/'));
+                                    $img = $product->images[0] ?? '';
+                                    $recentImg = \Illuminate\Support\Str::startsWith($img, 'static/') ? asset($img) : asset('storage/' . ltrim($img, '/'));
                                 }
                             @endphp
                             <img alt="{{ $product->name }}" loading="lazy"

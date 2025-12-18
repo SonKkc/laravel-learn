@@ -34,17 +34,32 @@
                             <div x-data="{ open: false, loading: false, html: '', async load() { if (this.html) return;
                                     this.loading = true; try { const res = await fetch('{{ route('cart.preview') }}', { credentials: 'same-origin' }); if (res.ok) { this.html = await res.text(); } } catch (e) { console.error(e); } finally { this.loading = false; } } }" class="relative" x-cloak>
                                 @php
-                                    $cart = session('cart', []);
+                                    // Use DB-backed cart for authenticated users to keep badge consistent
                                     $cartCount = 0;
-                                    if (!empty($cart) && is_array($cart)) {
-                                        foreach ($cart as $it) {
-                                            $cartCount += isset($it['qty']) ? (int) $it['qty'] : 1;
+                                    if (Auth::check()) {
+                                        try {
+                                            $cartModel = \App\Models\Cart::firstOrCreate(['user_id' => Auth::id()]);
+                                            $cartArr = $cartModel->toArrayPayload();
+                                            foreach ($cartArr as $it) {
+                                                $cartCount += isset($it['qty']) ? (int) $it['qty'] : 1;
+                                            }
+                                        } catch (\Exception $e) {
+                                            $cartCount = 0;
+                                        }
+                                    } else {
+                                        $cart = session('cart', []);
+                                        if (!empty($cart) && is_array($cart)) {
+                                            foreach ($cart as $it) {
+                                                $cartCount += isset($it['qty']) ? (int) $it['qty'] : 1;
+                                            }
                                         }
                                     }
                                 @endphp
                                 <button @click="open = !open; if (open) load()" @keydown.escape="open = false" type="button" class="relative inline-flex items-center rounded-full bg-gray-50 p-2 text-gray-700 hover:bg-gray-100 focus:outline-none">
                                     @if ($cartCount > 0)
                                         <span data-cart-badge class="bg-main-red absolute -right-1 -top-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1.5 py-0.5 text-xs font-semibold leading-none text-white">{{ $cartCount }}</span>
+                                    @else
+                                        <span data-cart-badge class="bg-main-red absolute -right-1 -top-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1.5 py-0.5 text-xs font-semibold leading-none text-white">0</span>
                                     @endif
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-5 w-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
@@ -164,11 +179,23 @@
                 <a href="{{ route('categories.index') }}" class="block rounded-lg px-4 py-3 font-medium text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">Categories</a>
                 <a href="{{ route('products.index') }}" class="block rounded-lg px-4 py-3 font-medium text-gray-800 transition duration-300 ease-in-out hover:bg-gray-50 hover:text-red-700">Products</a>
                 @php
-                    $cartMobile = session('cart', []);
                     $cartMobileCount = 0;
-                    if (!empty($cartMobile) && is_array($cartMobile)) {
-                        foreach ($cartMobile as $it) {
-                            $cartMobileCount += isset($it['qty']) ? (int) $it['qty'] : 1;
+                    if (Auth::check()) {
+                        try {
+                            $cartModel = \App\Models\Cart::firstOrCreate(['user_id' => Auth::id()]);
+                            $cartArr = $cartModel->toArrayPayload();
+                            foreach ($cartArr as $it) {
+                                $cartMobileCount += isset($it['qty']) ? (int) $it['qty'] : 1;
+                            }
+                        } catch (\Exception $e) {
+                            $cartMobileCount = 0;
+                        }
+                    } else {
+                        $cartMobile = session('cart', []);
+                        if (!empty($cartMobile) && is_array($cartMobile)) {
+                            foreach ($cartMobile as $it) {
+                                $cartMobileCount += isset($it['qty']) ? (int) $it['qty'] : 1;
+                            }
                         }
                     }
                 @endphp

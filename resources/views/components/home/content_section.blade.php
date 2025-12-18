@@ -30,7 +30,8 @@
                             @php
                                 $imgSrc = null;
                                 if (is_array($product->images) && !empty($product->images[0])) {
-                                    $imgSrc = asset('storage/' . ltrim($product->images[0], '/'));
+                                    $img = $product->images[0] ?? '';
+                                    $imgSrc = \Illuminate\Support\Str::startsWith($img, 'static/') ? asset($img) : asset('storage/' . ltrim($img, '/'));
                                 }
                             @endphp
                             <img alt="{{ $product->name }}" loading="lazy"

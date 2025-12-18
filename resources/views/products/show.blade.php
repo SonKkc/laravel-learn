@@ -13,7 +13,7 @@
                                 <div class="swiper-wrapper !bg-transparent">
                                     @foreach($product->images as $img)
                                         <div class="swiper-slide">
-                                            <img src="{{ asset('storage/'.$img) }}" alt="{{ $product->name }}" class="h-auto w-full object-cover rounded-lg !bg-transparent select-none" />
+                                            <img src="{{ \Illuminate\Support\Str::startsWith($img, 'static/') ? asset($img) : asset('storage/'.ltrim($img, '/')) }}" alt="{{ $product->name }}" class="h-auto w-full object-cover rounded-lg !bg-transparent select-none" />
                                         </div>
                                     @endforeach
                                 </div>
@@ -25,7 +25,7 @@
                         <!-- Swiper thumbs -->
                         <div class="mt-4 flex gap-2 justify-center" id="swiper-thumbs">
                             @foreach($product->images as $img)
-                                <img src="{{ asset('storage/'.$img) }}" alt="{{ $product->name }}" class="h-16 w-16 object-cover rounded shadow border border-[#f3f4f6] bg-white cursor-pointer transition hover:scale-105 active:scale-107 swiper-thumb select-none">
+                                <img src="{{ \Illuminate\Support\Str::startsWith($img, 'static/') ? asset($img) : asset('storage/'.ltrim($img, '/')) }}" alt="{{ $product->name }}" class="h-16 w-16 object-cover rounded shadow border border-[#f3f4f6] bg-white cursor-pointer transition hover:scale-105 active:scale-107 swiper-thumb select-none">
                             @endforeach
                         </div>
                         <script>

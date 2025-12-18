@@ -7,7 +7,15 @@ use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 class CartController extends Controller {
     public function index() {
-        return view('cart.index');
+        // Use same source as preview: DB-backed cart for authenticated users, session otherwise
+        if (Auth::check()) {
+            $cartModel = Cart::firstOrCreate(['user_id' => Auth::id()]);
+            $cart = $cartModel->toArrayPayload();
+        } else {
+            $cart = session('cart', []);
+        }
+
+        return view('cart.index', compact('cart'));
     }
 
     /**
