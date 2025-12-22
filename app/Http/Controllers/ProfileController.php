@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -22,13 +23,16 @@ class ProfileController extends Controller
         // Supported statuses (adjust to match your app's statuses)
         $availableStatuses = [
             'all' => 'Tất cả',
-            'pending' => 'Chờ xử lý',
+            'new' => 'Chờ xử lý',
             'processing' => 'Đang xử lý',
             'completed' => 'Hoàn thành',
             'cancelled' => 'Đã hủy',
         ];
 
         $status = $request->query('status', 'all');
+
+        // Get user addresses for profile page
+        $addresses = $user->addresses()->orderBy('created_at', 'desc')->get();
 
         // Build query and paginate
         $query = $user->orders()->with('items.product')->orderBy('created_at', 'desc');
@@ -47,6 +51,25 @@ class ProfileController extends Controller
             ->pluck('count', 'status')
             ->toArray();
 
-        return view('profile.show', compact('user', 'orders', 'statusCounts', 'status', 'availableStatuses'));
+        return view('profile.show', compact('user', 'orders', 'statusCounts', 'status', 'availableStatuses', 'addresses'));
+    }
+
+    /**
+     * Update basic profile information (name, email)
+     */
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+        if (! $user) return redirect()->route('login');
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+        ]);
+
+        // If email changed, consider verifying flow elsewhere
+        $user->update($data);
+
+        return redirect()->route('profile.show')->with('success', 'Cập nhật hồ sơ thành công');
     }
 }

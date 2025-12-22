@@ -28,7 +28,7 @@ class Order extends Model
 
     public function address()
     {
-        return $this->hasOne(Address::class);
+        return $this->hasOne(Address::class, 'order_id');
     }
 
     public function items()

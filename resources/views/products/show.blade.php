@@ -100,7 +100,7 @@
                                     </div>
                                     <span class="ml-4 text-sm text-gray-500">Kho: <span class="font-semibold text-main-red">{{ $product->quantity }}</span></span>
                                 </div>
-                                <button type="button" data-add-to-cart data-product-id="{{ $product->id }}" data-cart-url="{{ route('cart.add') }}"
+                                <button type="button" data-add-to-cart data-product-id="{{ $product->id }}" data-cart-url="{{ route('cart.add') }}" data-authenticated="{{ auth()->check() ? '1' : '0' }}"
                                     class="w-full bg-main-red hover:bg-main-red-hover rounded-full px-6 py-3 font-bold text-white shadow-lg text-lg tracking-wide
                                     transition-all duration-300 ease-out hover:scale-103 hover:shadow-xl
                                     focus-visible:outline-none active:scale-95">
@@ -116,8 +116,51 @@
                     </form>
                     <script>
                     document.addEventListener('DOMContentLoaded', function () {
+                        // reusable login prompt (created once)
+                        function showLoginPrompt() {
+                            if (document.getElementById('login-prompt-modal')) {
+                                document.getElementById('login-prompt-modal').classList.remove('hidden');
+                                return;
+                            }
+                            const loginUrl = '{{ route('login') }}';
+                            const modal = document.createElement('div');
+                            modal.id = 'login-prompt-modal';
+                            modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/40';
+                            modal.innerHTML = `
+                                <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 mx-4">
+                                    <h3 class="text-lg font-semibold mb-2">Vui lòng đăng nhập</h3>
+                                    <p class="text-sm text-gray-600 mb-4">Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.</p>
+                                    <div class="flex gap-3 justify-end">
+                                        <button id="login-prompt-cancel" class="px-4 py-2 rounded border">Huỷ</button>
+                                        <a id="login-prompt-login" href="${loginUrl}" class="px-4 py-2 rounded bg-main-red text-white font-semibold">Đăng nhập</a>
+                                    </div>
+                                </div>
+                            `;
+                            document.body.appendChild(modal);
+                            // cancel handler
+                            modal.querySelector('#login-prompt-cancel').addEventListener('click', function () {
+                                modal.classList.add('hidden');
+                            });
+                            // close when clicking outside the content (backdrop)
+                            modal.addEventListener('click', function (ev) {
+                                if (ev.target === modal) {
+                                    modal.classList.add('hidden');
+                                }
+                            });
+                        }
+
                         document.querySelectorAll('[data-add-to-cart]').forEach(function (btn) {
                             btn.addEventListener('click', async function (e) {
+                                const isAuth = btn.getAttribute('data-authenticated') === '1';
+                                if (!isAuth) {
+                                    // show modal prompt or fallback to toast
+                                    if (window.showToast) {
+                                        window.showToast('Vui lòng đăng nhập để thực hiện hành động này', { type: 'info' });
+                                    }
+                                    showLoginPrompt();
+                                    return;
+                                }
+
                                 const productId = btn.dataset.productId;
                                 const url = btn.dataset.cartUrl;
                                 // find quantity input inside the same form
@@ -134,7 +177,7 @@
                                         try {
                                             const dropdown = document.querySelector('[x-html]');
                                             if (dropdown && data.html) dropdown.innerHTML = data.html;
-                                            document.querySelectorAll('[data-cart-badge]').forEach(function (b) { b.textContent = data.count; });
+                                            document.querySelectorAll('[data-cart-badge]').forEach(function (b) { if (data.count != null) b.textContent = data.count; });
                                         } catch (err) { console.warn(err); }
                                         const original = btn.innerHTML;
                                         btn.innerHTML = 'Đã thêm';

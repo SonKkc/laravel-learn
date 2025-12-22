@@ -79,7 +79,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 text-white">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                                     </svg>
-                                    <span class="font-semibold">{{ Auth::user()->name }}</span>
+                                    <span class="font-semibold line-clamp-1">{{ Auth::user()->name }}</span>
                                     <svg class="ml-1 h-4 w-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                                     </svg>
@@ -157,8 +157,8 @@
                                 </svg>
                             </div>
                             <div class="min-w-0">
-                                <div class="truncate font-semibold text-gray-900">{{ Auth::user()->name }}</div>
-                                <div class="truncate text-xs text-gray-500">{{ Auth::user()->email }}</div>
+                                <div class="truncate font-semibold text-gray-900 line-clamp-1">{{ Auth::user()->name }}</div>
+                                <div class="truncate text-xs text-gray-500 line-clamp-1">{{ Auth::user()->email }}</div>
                             </div>
                         </div>
                         <div class="mt-3 space-y-1">

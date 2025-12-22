@@ -127,7 +127,7 @@ body {
 }
 @media (min-width: 1024px) {
     .footer__container {
-        @apply max-w-screen-xl px-8;
+        @apply max-w-[1536px] px-8;
     }
 }
 .footer__main {

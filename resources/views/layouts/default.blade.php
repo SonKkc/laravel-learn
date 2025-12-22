@@ -34,6 +34,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1/dist/panzoom/panzoom.umd.js"></script>
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+    {{-- Stacks for per-page scripts and modals --}}
+    @stack('scripts')
+    @stack('modals')
 </body>
 
 </html>
