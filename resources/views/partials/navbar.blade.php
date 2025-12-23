@@ -68,9 +68,9 @@
                                     <span class="sr-only">Open cart</span>
                                 </button>
                                 <div x-show="open" x-transition class="absolute right-0 z-50 mt-2 w-80 max-w-xs origin-top-right rounded-xl bg-white py-2 shadow-xl ring-1 ring-black/10" @click.away="open = false">
-                                    <div x-show="loading" class="p-4 text-sm text-gray-500">Đang tải...</div>
+                                    <div x-show="loading" class="p-4 text-sm text-gray-500">Loading...</div>
                                     <div x-html="html"></div>
-                                    <div x-show="!loading && html === ''" class="p-4 text-sm text-gray-500">Giỏ hàng trống.</div>
+                                    <div x-show="!loading && html === ''" class="p-4 text-sm text-gray-500">Your cart is empty.</div>
                                 </div>
                             </div>
                             <!-- User dropdown -->
@@ -100,7 +100,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-main-red h-5 w-5">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                                         </svg>
-                                        <span>Hồ sơ cá nhân</span>
+                                        <span>Profile</span>
                                     </a>
                                     <form method="POST" action="{{ route('logout') }}" class="mt-1">
                                         @csrf
@@ -108,13 +108,13 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                             </svg>
-                                            Đăng xuất
+                                            Log out
                                         </button>
                                     </form>
                                 </div>
                             </div>
                         @else
-                            <a href="/login" class="bg-main-red hover:bg-main-red-hover ml-2 rounded-full px-4 py-2 font-semibold text-white shadow transition-all duration-200">Login</a>
+                            <a href="/login" class="bg-main-red hover:bg-main-red-hover ml-2 rounded-full px-4 py-2 font-semibold text-white shadow transition-all duration-200 hidden md:block">Login</a>
                         @endauth
                     </div>
 
@@ -134,10 +134,10 @@
         <nav class="border-b border-gray-300/60 bg-white" aria-label="Global" id="mobile-menu">
             <div class="space-y-1 px-2 pb-3 pt-2">
                 {{-- Mobile Search --}}
-                <form action="/products" method="get" class="px-4 py-3">
+                    <form action="/products" method="get" class="px-4 py-3">
                     <label for="mobile-search" class="sr-only">Search</label>
                     <div class="flex items-center gap-2">
-                        <input id="mobile-search" name="search" placeholder="Tìm kiếm..." class="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none" />
+                        <input id="mobile-search" name="search" placeholder="Search..." class="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none" />
                         <button type="submit" class="inline-flex items-center justify-center rounded-md bg-main-red px-3 py-2 text-white">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35" />
@@ -162,17 +162,17 @@
                             </div>
                         </div>
                         <div class="mt-3 space-y-1">
-                            <a href="{{ route('profile.show') }}" class="block rounded-lg px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Hồ sơ cá nhân</a>
-                            <a href="{{ route('orders.my') }}" class="block rounded-lg px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Đơn hàng của tôi</a>
+                            <a href="{{ route('profile.show') }}" class="block rounded-lg px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Profile</a>
+                            <a href="{{ route('orders.my') }}" class="block rounded-lg px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Orders</a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="w-full text-left rounded-lg px-4 py-2 text-sm text-main-red hover:bg-gray-50">Đăng xuất</button>
+                                <button type="submit" class="w-full text-left rounded-lg px-4 py-2 text-sm text-main-red hover:bg_gray-50">Log out</button>
                             </form>
                         </div>
                     </div>
                 @else
                     <div class="px-4 py-3 border-b">
-                        <a href="/login" class="block rounded-lg px-4 py-2 text-sm font-semibold text-main-red hover:bg-gray-50">Đăng nhập</a>
+                        <a href="/login" class="block rounded-lg px-4 py-2 text-sm font-semibold text-main-red hover:bg-gray-50">Log in</a>
                     </div>
                 @endauth
 

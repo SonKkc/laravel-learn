@@ -5,7 +5,7 @@
         <div class="container_md">
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $category->name }}</h1>
-                <p class="text-gray-600">{{ $category->description ?? 'Khám phá các sản phẩm nổi bật trong danh mục này.' }}</p>
+                <p class="text-gray-600">{{ $category->description ?? 'Discover featured products in this category.' }}</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -13,7 +13,7 @@
                     <x-product-card :product="$product" :categoryName="$category->name" />
                 @empty
                     <div class="col-span-3 text-center text-gray-500 py-12">
-                        Không có sản phẩm nào trong danh mục này.
+                        No products found in this category.
                     </div>
                 @endforelse
             </div>

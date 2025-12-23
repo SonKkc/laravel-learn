@@ -6,22 +6,22 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="col-span-1">
                 <div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-200">
-                    <h3 class="text-lg font-semibold mb-4">Thông tin tài khoản</h3>
-                    <p class="text-sm text-gray-600 mb-2"><strong>Tên:</strong> {{ $user->name }}</p>
+                    <h3 class="text-lg font-semibold mb-4">Account information</h3>
+                    <p class="text-sm text-gray-600 mb-2"><strong>Name:</strong> {{ $user->name }}</p>
                     <p class="text-sm text-gray-600 mb-2"><strong>Email:</strong> {{ $user->email }}</p>
                     @if(isset($user->email_verified_at))
-                        <p class="text-sm text-gray-600 mb-2"><strong>Đã xác thực email:</strong> {{ $user->email_verified_at ? $user->email_verified_at->format('Y-m-d H:i') : 'Chưa' }}</p>
+                        <p class="text-sm text-gray-600 mb-2"><strong>Email verified:</strong> {{ $user->email_verified_at ? $user->email_verified_at->format('Y-m-d H:i') : 'No' }}</p>
                     @endif
                     <div class="mt-4">
-                        <button id="btn-open-profile-modal" type="button" class="inline-flex items-center gap-2 rounded-full bg-main-red px-4 py-2 text-white transform transition-transform duration-200 ease-out active:scale-95 hover:scale-105">Chỉnh sửa hồ sơ</button>
+                        <button id="btn-open-profile-modal" type="button" class="inline-flex items-center gap-2 rounded-full bg-main-red px-4 py-2 text-white transform transition-transform duration-200 ease-out active:scale-95 hover:scale-105">Edit profile</button>
                     </div>
                 </div>
 
                 <div class="mt-6 rounded-lg bg-white p-6 shadow-lg transition-shadow duration-200">
-                    <h3 class="text-lg font-semibold mb-4">Địa chỉ của tôi</h3>
+                        <h3 class="text-lg font-semibold mb-4">My addresses</h3>
                     <div class="mt-4">
                         @if($addresses->isEmpty())
-                            <div class="text-sm text-gray-500">Bạn chưa có địa chỉ nào.</div>
+                            <div class="text-sm text-gray-500">You don't have any addresses yet.</div>
                         @else
                             <div class="space-y-3">
                                 @foreach($addresses as $addr)
@@ -30,10 +30,10 @@
                                         <div class="text-sm text-gray-600">{{ $addr->street_address }}, {{ $addr->city }} {{ $addr->state }} {{ $addr->zip_code }} — {{ $addr->phone }}</div>
                                         <div class="mt-2">
                                             <div class="flex gap-2">
-                                                <button type="button" class="btn btn-secondary btn-edit-address inline-flex items-center gap-2" data-id="{{ $addr->id }}" data-first_name="{{ e($addr->first_name) }}" data-last_name="{{ e($addr->last_name) }}" data-phone="{{ e($addr->phone) }}" data-street_address="{{ e($addr->street_address) }}" data-city="{{ e($addr->city) }}" data-state="{{ e($addr->state) }}" data-zip_code="{{ e($addr->zip_code) }}">Chỉnh sửa</button>
-                                                <form method="POST" action="{{ route('addresses.destroy', $addr) }}" onsubmit="return confirm('Xoá địa chỉ này?')">
+                                                <button type="button" class="btn btn-secondary btn-edit-address inline-flex items-center gap-2" data-id="{{ $addr->id }}" data-first_name="{{ e($addr->first_name) }}" data-last_name="{{ e($addr->last_name) }}" data-phone="{{ e($addr->phone) }}" data-street_address="{{ e($addr->street_address) }}" data-city="{{ e($addr->city) }}" data-state="{{ e($addr->state) }}" data-zip_code="{{ e($addr->zip_code) }}">Edit</button>
+                                                <form method="POST" action="{{ route('addresses.destroy', $addr) }}" onsubmit="return confirm('Delete this address?')">
                                                     @csrf @method('DELETE')
-                                                    <button class="btn btn-danger text-sm">Xoá</button>
+                                                    <button class="btn btn-danger text-sm">Delete</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -42,8 +42,8 @@
                             </div>
                         @endif
                     </div>
-                     <div class="mt-4">
-                        <button id="btn-open-address-modal" type="button" class="inline-flex items-center gap-2 rounded-full bg-main-red px-4 py-2 text-white transform transition-transform duration-200 ease-out active:scale-95 hover:scale-105">Thêm địa chỉ mới</button>
+                        <div class="mt-4">
+                        <button id="btn-open-address-modal" type="button" class="inline-flex items-center gap-2 rounded-full bg-main-red px-4 py-2 text-white transform transition-transform duration-200 ease-out active:scale-95 hover:scale-105">Add new address</button>
                     </div>
                 </div>
             </div>
@@ -51,18 +51,18 @@
             <div class="col-span-1 lg:col-span-2">
                 <div class="rounded-lg bg-white p-6 shadow-lg">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold">Đơn hàng của tôi</h3>
-                        <div class="text-sm text-gray-500">Tổng: {{ $orders->total() }} đơn</div>
+                        <h3 class="text-lg font-semibold">My Orders</h3>
+                        <div class="text-sm text-gray-500">Total: {{ $orders->total() }} orders</div>
                     </div>
 
                     {{-- Tabs --}}
                     @php
                         $tabs = [
-                            'all' => 'Tất cả',
-                            'new' => 'Chờ xử lý',
-                            'processing' => 'Đang xử lý',
-                            'completed' => 'Hoàn thành',
-                            'cancelled' => 'Đã hủy',
+                            'all' => 'All',
+                            'new' => 'New',
+                            'processing' => 'Processing',
+                            'completed' => 'Completed',
+                            'cancelled' => 'Cancelled',
                         ];
                     @endphp
 
@@ -80,28 +80,28 @@
 
                     <div id="orders-list">
                         @if($orders->isEmpty())
-                            <p class="text-sm text-gray-600">Không tìm thấy đơn hàng cho tab này.</p>
+                            <p class="text-sm text-gray-600">No orders found for this tab.</p>
                         @else
                             <div class="space-y-4">
                                 @foreach($orders as $order)
                                     <div class="border rounded p-4 mb-3 hover:shadow transition-shadow duration-150">
                                         <div class="flex justify-between items-center">
                                             <div>
-                                                <div class="font-medium">Đơn #{{ $order->id }}</div>
-                                                <div class="text-sm text-gray-600">{{ $order->created_at->format('Y-m-d H:i') }}</div>
+                                                    <div class="font-medium">Order #{{ $order->id }}</div>
+                                                    <div class="text-sm text-gray-600">{{ $order->created_at->format('Y-m-d H:i') }}</div>
                                             </div>
                                             <div class="text-sm text-gray-700">{{ strtoupper($order->status) }}</div>
                                         </div>
-                                        <div class="mt-3 text-sm text-gray-600">
-                                            <div>Tổng: {{ number_format($order->grand_total ?? $order->total ?? 0, 0, ',', '.') }} VNĐ</div>
+                                            <div class="mt-3 text-sm text-gray-600">
+                                            <div>Total: {{ number_format($order->grand_total ?? $order->total ?? 0, 0, ',', '.') }} USD</div>
                                         </div>
 
                                         @if($order->items->isNotEmpty())
                                             <div class="mt-3">
-                                                <h4 class="text-sm font-medium mb-2">Sản phẩm</h4>
+                                                <h4 class="text-sm font-medium mb-2">Products</h4>
                                                 <ul class="text-sm text-gray-700 list-disc list-inside">
                                                     @foreach($order->items as $item)
-                                                        <li>{{ $item->product?->name ?? 'Sản phẩm đã xóa' }} — x{{ $item->quantity }} — {{ number_format($item->total_amount, 0, ',', '.') }}</li>
+                                                        <li>{{ $item->product?->name ?? 'Product removed' }} — x{{ $item->quantity }} — {{ number_format($item->total_amount, 0, ',', '.') }}</li>
                                                     @endforeach
                                                 </ul>
                                             </div>

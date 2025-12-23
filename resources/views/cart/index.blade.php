@@ -2,20 +2,20 @@
 @section('content')
 <section class="py-12">
     <div x-data="cartConfirm()" x-cloak class="container mx-auto px-4">
-        <h1 class="text-2xl font-semibold mb-6">Giỏ hàng của bạn</h1>
+        <h1 class="text-2xl font-semibold mb-6">Your Cart</h1>
 
         @php $items = $cart ?? session('cart', []); @endphp
 
         @if(empty($items) || count($items) === 0)
             <div class="rounded-lg bg-white p-8 shadow text-center">
-                <p class="text-gray-600 mb-4">Giỏ hàng trống.</p>
-                <a href="{{ url('/') }}" class="inline-block rounded-md border border-main-red text-main-red px-4 py-2">Tiếp tục mua sắm</a>
+                <p class="text-gray-600 mb-4">Your cart is empty.</p>
+                <a href="{{ url('/') }}" class="inline-block rounded-md border border-main-red text-main-red px-4 py-2">Continue shopping</a>
             </div>
         @else
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-2">
                     <div class="rounded-lg bg-white p-6 shadow">
-                        <h2 class="text-lg font-semibold mb-4">Sản phẩm trong giỏ</h2>
+                        <h2 class="text-lg font-semibold mb-4">Items in cart</h2>
                         <ul id="cart-items" class="divide-y">
                             @php $subtotal = 0; @endphp
                             @foreach($items as $item)
@@ -32,13 +32,13 @@
                                         @if(!empty($img))
                                             <img src="{{ $imgSrc }}" alt="{{ $item['name'] ?? '' }}" class="h-20 w-20 rounded object-cover">
                                         @else
-                                            <div class="h-20 w-20 rounded bg-gray-100 flex items-center justify-center text-gray-400">No
+                                            <div class="h-20 w-20 rounded bg-gray-100 flex items-center justify-center text-gray-400">No image
                                             </div>
                                         @endif
 
                                         <div class="min-w-0">
-                                            <a href="{{ route('products.show', $item['id']) }}" class="font-medium truncate hover:underline">{{ $item['name'] ?? 'Sản phẩm' }}</a>
-                                            <div class="text-sm text-gray-500 mt-1">{{ number_format($item['price'] ?? 0, 0, ',', '.') }} đ</div>
+                                            <a href="{{ route('products.show', $item['id']) }}" class="font-medium truncate hover:underline">{{ $item['name'] ?? 'Product' }}</a>
+                                            <div class="text-sm text-gray-500 mt-1">{{ number_format($item['price'] ?? 0, 0, ',', '.') }} USD</div>
                                         </div>
                                     </div>
 
@@ -48,25 +48,25 @@
                                                 type="button"
                                                 x-on:click.prevent="handleChange($event, '{{ route('cart.update') }}', {{ $item['id'] }}, -1)"
                                                 class="px-3 py-1 bg-gray-100 text-sm"
-                                                aria-label="Giảm số lượng"
+                                                aria-label="Decrease quantity"
                                             >−</button>
                                             <div class="px-4 py-1 text-sm" aria-live="polite" data-cart-qty="{{ $item['id'] }}">{{ $qty }}</div>
                                             <button
                                                 type="button"
                                                 x-on:click.prevent="handleChange($event, '{{ route('cart.update') }}', {{ $item['id'] }}, 1)"
                                                 class="px-3 py-1 bg-gray-100 text-sm"
-                                                aria-label="Tăng số lượng"
+                                                aria-label="Increase quantity"
                                             >+</button>
                                         </div>
 
-                                        <div class="text-sm font-semibold" data-cart-line-total="{{ $item['id'] }}">{{ number_format($lineTotal, 0, ',', '.') }} đ</div>
+                                        <div class="text-sm font-semibold" data-cart-line-total="{{ $item['id'] }}">{{ number_format($lineTotal, 0, ',', '.') }} USD</div>
 
                                         <button
                                             type="button"
                                             x-bind:disabled="processing"
                                             x-on:click.prevent="openConfirm('remove', '{{ route('cart.remove') }}', {{ $item['id'] }}, $event)"
                                             class="inline-flex items-center justify-center h-9 w-9 rounded bg-red-500 text-white"
-                                            aria-label="Xoá sản phẩm"
+                                            aria-label="Remove product"
                                         >✕</button>
                                     </div>
                                 </li>
@@ -77,27 +77,27 @@
 
                 <aside class="lg:col-span-1">
                     <div id="cart-summary" class="rounded-lg bg-white p-6 shadow space-y-4">
-                        <h3 class="text-lg font-semibold">Tóm tắt đơn hàng</h3>
+                        <h3 class="text-lg font-semibold">Order summary</h3>
                         <div class="flex items-center justify-between text-sm text-gray-600">
-                            <div>Tạm tính</div>
-                            <div data-cart-subtotal="true">{{ number_format($subtotal, 0, ',', '.') }} đ</div>
+                            <div>Subtotal</div>
+                            <div data-cart-subtotal="true">{{ number_format($subtotal, 0, ',', '.') }} USD</div>
                         </div>
                         <div class="flex items-center justify-between text-sm text-gray-600">
-                            <div>Phí vận chuyển</div>
-                            <div>Miễn phí</div>
+                            <div>Shipping fee</div>
+                            <div>Free</div>
                         </div>
                         <div class="border-t pt-3 flex items-center justify-between">
-                            <div class="text-base font-semibold">Tổng cộng</div>
-                            <div class="text-base font-semibold" data-cart-total="true">{{ number_format($subtotal, 0, ',', '.') }} đ</div>
+                            <div class="text-base font-semibold">Total</div>
+                            <div class="text-base font-semibold" data-cart-total="true">{{ number_format($subtotal, 0, ',', '.') }} USD</div>
                         </div>
 
                         @auth
-                            <a href="{{ route('checkout.index') }}" class="inline-block w-full rounded-md bg-main-red px-4 py-3 text-center text-white">Tiến hành thanh toán</a>
+                            <a href="{{ route('checkout.index') }}" class="inline-block w-full rounded-md bg-main-red px-4 py-3 text-center text-white">Proceed to Checkout</a>
                         @else
-                            <a href="{{ route('login') }}?redirect={{ urlencode(route('checkout.index')) }}" class="inline-block w-full rounded-md bg-main-red px-4 py-3 text-center text-white">Đăng nhập để thanh toán</a>
+                            <a href="{{ route('login') }}?redirect={{ urlencode(route('checkout.index')) }}" class="inline-block w-full rounded-md bg-main-red px-4 py-3 text-center text-white">Login to checkout</a>
                         @endauth
 
-                        <a href="{{ url('/') }}" class="block text-center text-sm text-gray-600">Tiếp tục mua sắm</a>
+                        <a href="{{ url('/') }}" class="block text-center text-sm text-gray-600">Continue shopping</a>
                     </div>
                 </aside>
             </div>

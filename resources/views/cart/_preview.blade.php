@@ -1,5 +1,5 @@
 @if(empty($cart) || count($cart) === 0)
-    <div class="p-4 text-sm text-gray-600">Giỏ hàng trống.</div>
+    <div class="p-4 text-sm text-gray-600">Your cart is empty.</div>
 @else
     <div class="p-4">
         <ul class="divide-y">
@@ -16,7 +16,7 @@
                             <img src="{{ $imgSrc }}" class="h-10 w-10 rounded object-cover" alt="{{ $item['name'] }}">
                         @endif
                         <div class="min-w-0">
-                            <div class="truncate font-medium">{{ $item['name'] ?? 'Sản phẩm' }}</div>
+                            <div class="truncate font-medium">{{ $item['name'] ?? 'Product' }}</div>
                             <div class="text-xs text-gray-500">x<span class="cart-item-qty">{{ $item['qty'] ?? 1 }}</span></div>
                         </div>
                     </a>
@@ -31,12 +31,12 @@
         </ul>
 
         <div class="mt-4 flex items-center justify-between border-t pt-3">
-            <div class="text-sm text-gray-600">Tổng:</div>
+            <div class="text-sm text-gray-600">Total:</div>
             <div class="text-base font-semibold">{{ number_format($subtotal, 0, ',', '.') }}</div>
         </div>
 
         <div class="mt-3">
-            <a href="{{ route('cart.index') }}" class="inline-block w-full rounded-md bg-main-red px-4 py-2 text-center text-white">Xem giỏ hàng</a>
+            <a href="{{ route('cart.index') }}" class="inline-block w-full rounded-md bg-main-red px-4 py-2 text-center text-white">View cart</a>
         </div>
     </div>
 @endif
