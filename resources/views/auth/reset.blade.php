@@ -10,7 +10,20 @@
             <h2 class="text-2xl font-bold text-gray-900 mb-1">Đặt lại mật khẩu</h2>
             <p class="text-gray-500 text-sm">Nhập mật khẩu mới cho tài khoản của bạn.</p>
         </div>
-        <form method="POST" action="{{ route('password.update') }}" class="space-y-5">
+        @if (session('status'))
+            <div class="mb-4 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-green-700">{{ session('status') }}</div>
+        @endif
+        @if ($errors->any())
+            <div class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-red-700">
+                <ul class="list-disc list-inside text-sm">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('reset.post') }}" class="space-y-5">
             @csrf
             <input type="hidden" name="token" value="{{ $token ?? '' }}">
             <div>

@@ -11,6 +11,22 @@
             <p class="text-gray-500 text-sm">Chào mừng bạn quay lại!</p>
         </div>
 
+        @if (session('status'))
+            @push('scripts')
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        try {
+                            if (window.showToast) {
+                                window.showToast({!! json_encode(session('status')) !!}, { type: 'default', duration: 4000 });
+                            }
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    });
+                </script>
+            @endpush
+        @endif
+
         @if ($errors->any())
             <div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-500">
                 <ul class="list-disc list-inside">

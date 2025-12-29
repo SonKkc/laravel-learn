@@ -55,8 +55,12 @@ Route::middleware('auth')->group(function () {
 // Auth
 Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 Route::get('/forgot', [AuthController::class, 'forgotForm'])->name('forgot');
+Route::post('/forgot', [AuthController::class, 'forgot'])->name('forgot.post');
+
 Route::get('/reset', [AuthController::class, 'resetForm'])->name('reset');
+Route::post('/reset', [AuthController::class, 'reset'])->name('reset.post');
 
 // Payment result
 Route::get('/success', [CheckoutController::class, 'success'])->name('checkout.success');

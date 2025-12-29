@@ -37,7 +37,7 @@
                                     <a class="blog-section__meta-author" href="#">{{ $product->brand->name ?? '' }}</a>
                                     {{-- <time datetime="{{ $product->created_at }}" class="blog-section__meta-date">{{ $product->created_at->format('M d, Y') }}</time> --}}
                                     <span class="mx-2">·</span>
-                                    <span class="text-main-red">{{ $product->price }} USD</span>
+                                    <span class="text-main-red">{{ formatUSD($product->price) }}</span>
                                 </div>
                             </footer>
                         </div>

@@ -93,7 +93,7 @@
                                             <div class="text-sm text-gray-700">@include('partials.order-status', ['status' => $order->status])</div>
                                         </div>
                                             <div class="mt-3 text-sm text-gray-600">
-                                            <div>Total: {{ number_format($order->grand_total ?? $order->total ?? 0, 0, ',', '.') }} USD</div>
+                                            <div>Total: {{ formatUSD($order->grand_total ?? $order->total ?? 0) }}</div>
                                         </div>
 
                                         @if($order->items->isNotEmpty())
@@ -101,7 +101,7 @@
                                                 <h4 class="text-sm font-medium mb-2">Products</h4>
                                                 <ul class="text-sm text-gray-700 list-disc list-inside">
                                                     @foreach($order->items as $item)
-                                                        <li>{{ $item->product?->name ?? 'Product removed' }} — x{{ $item->quantity }} — {{ number_format($item->total_amount, 0, ',', '.') }}</li>
+                                                        <li>{{ $item->product?->name ?? 'Product removed' }} — x{{ $item->quantity }} — {{ formatUSD($item->total_amount) }}</li>
                                                     @endforeach
                                                 </ul>
                                             </div>

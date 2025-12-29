@@ -33,7 +33,11 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
-        $brands = Brand::all();
+        // Lấy 6 brand active để hiển thị ở phần trending trên trang home
+        $brands = Brand::where('is_active', true)
+            ->orderByDesc('created_at')
+            ->take(6)
+            ->get();
 
         // Category có số lượng bán nhiều nhất
         $topCategoryId = OrderItem::selectRaw('product_id, SUM(quantity) as total')

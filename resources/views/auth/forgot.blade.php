@@ -10,11 +10,24 @@
             <h2 class="text-2xl font-bold text-gray-900 mb-1">Quên mật khẩu</h2>
             <p class="text-gray-500 text-sm">Nhập email để nhận liên kết đặt lại mật khẩu.</p>
         </div>
-        <form method="POST" action="{{ route('password') }}" class="space-y-5">
+        @if (session('status'))
+            <div class="mb-4 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-green-700">{{ session('status') }}</div>
+        @endif
+        @if ($errors->any())
+            <div class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-red-700">
+                <ul class="list-disc list-inside text-sm">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('forgot.post') }}" class="space-y-5">
             @csrf
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input id="email" type="email" name="email" required autofocus autocomplete="email"
+                <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email"
                     class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-gray-900 focus:border-main-red focus:ring-2 focus:ring-main-red/30 focus:outline-none transition" />
             </div>
             <button type="submit" class="w-full rounded-full bg-main-red hover:bg-main-red-hover transition text-white font-bold py-2.5 mt-2 shadow-lg text-lg tracking-wide focus:outline-none focus:ring-2 focus:ring-main-red/30">Gửi liên kết</button>

@@ -10,6 +10,9 @@
             <h2 class="text-2xl font-bold text-gray-900 mb-1">Đăng ký</h2>
             <p class="text-gray-500 text-sm">Tạo tài khoản mới để mua sắm dễ dàng hơn.</p>
         </div>
+        @if (session('status'))
+            <div class="mb-4 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-green-700">{{ session('status') }}</div>
+        @endif
         @if ($errors->any())
             <div class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-red-700">
                 <ul class="list-disc list-inside text-sm">
@@ -19,16 +22,16 @@
                 </ul>
             </div>
         @endif
-        <form method="POST" action="{{ route('register') }}" class="space-y-5">
+        <form method="POST" action="{{ route('register.post') }}" class="space-y-5">
             @csrf
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
-                <input id="name" type="text" name="name" required autofocus autocomplete="name"
+                <input id="name" type="text" name="name" required autofocus autocomplete="name" value="{{ old('name') }}"
                     class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-gray-900 focus:border-main-red focus:ring-2 focus:ring-main-red/30 focus:outline-none transition" />
             </div>
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input id="email" type="email" name="email" required autocomplete="email"
+                <input id="email" type="email" name="email" required autocomplete="email" value="{{ old('email') }}"
                     class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-gray-900 focus:border-main-red focus:ring-2 focus:ring-main-red/30 focus:outline-none transition" />
             </div>
             <div>

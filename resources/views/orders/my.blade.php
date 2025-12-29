@@ -16,7 +16,7 @@
                     <div class="rounded-lg bg-white p-4 shadow hover:shadow-md transition-shadow duration-150 flex items-center justify-between">
                         <div>
                             <div class="text-sm text-gray-500">Order #{{ $order->id }} &middot; <span class="text-xs text-gray-400">{{ $order->created_at->format('Y-m-d') }}</span></div>
-                            <div class="text-base font-semibold mt-1">{{ number_format($order->grand_total ?? $order->total ?? 0, 0, ',', '.') }} USD</div>
+                            <div class="text-base font-semibold mt-1">{{ formatUSD($order->grand_total ?? $order->total ?? 0) }}</div>
                         </div>
 
                         <div class="flex items-center gap-4">

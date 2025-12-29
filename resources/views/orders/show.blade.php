@@ -17,7 +17,7 @@
                             <div class="text-sm text-gray-500">Order date: <span class="font-medium">{{ $order->created_at->format('Y-m-d H:i') }}</span></div>
                         </div>
                         <div class="text-right">
-                            <div class="text-base font-semibold">{{ number_format($order->grand_total ?? $order->total ?? 0, 0, ',', '.') }} USD</div>
+                            <div class="text-base font-semibold">{{ formatUSD($order->grand_total ?? $order->total ?? 0) }}</div>
                             <div class="mt-2">
                                 @include('partials.order-status', ['status' => $order->status])
                             </div>
@@ -47,10 +47,10 @@
                                         @endif
                                         <div>
                                             <div class="font-medium">{{ $item->product?->name ?? 'Product removed' }}</div>
-                                            <div class="text-sm text-gray-500">x{{ $item->quantity }} × {{ number_format($item->price ?? 0, 0, ',', '.') }} USD</div>
+                                            <div class="text-sm text-gray-500">x{{ $item->quantity }} × {{ formatUSD($item->price ?? 0) }}</div>
                                         </div>
                                     </div>
-                                    <div class="text-sm font-medium">{{ number_format($item->total_amount ?? ($item->price * $item->quantity) ?? 0, 0, ',', '.') }} USD</div>
+                                    <div class="text-sm font-medium">{{ formatUSD($item->total_amount ?? ($item->price * $item->quantity) ?? 0) }}</div>
                                 </div>
                             @endforeach
                         </div>
@@ -82,15 +82,15 @@
                     <div class="mt-6 border-t pt-4">
                         <div class="flex justify-between text-sm text-gray-700">
                             <div>Subtotal</div>
-                            <div>{{ number_format($order->items->sum(fn($i)=> $i->total_amount ?? ($i->price * $i->quantity)), 0, ',', '.') }} USD</div>
+                            <div>{{ formatUSD($order->items->sum(fn($i)=> $i->total_amount ?? ($i->price * $i->quantity)) ) }}</div>
                         </div>
                         <div class="flex justify-between text-sm text-gray-700 mt-2">
                             <div>Shipping fee</div>
-                            <div>{{ number_format($order->shipping_amount ?? 0, 0, ',', '.') }} USD</div>
+                            <div>{{ formatUSD($order->shipping_amount ?? 0) }}</div>
                         </div>
                         <div class="flex justify-between text-base font-semibold mt-4">
                             <div>Total</div>
-                            <div>{{ number_format($order->grand_total ?? $order->total ?? 0, 0, ',', '.') }} USD</div>
+                            <div>{{ formatUSD($order->grand_total ?? $order->total ?? 0) }}</div>
                         </div>
                         @can('requestCancellation', $order)
                             <div class="mt-4">

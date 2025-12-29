@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Address;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class CheckoutController extends Controller
 {
@@ -32,17 +34,24 @@ class CheckoutController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'nullable|string|max:255',
-            'phone' => 'required|string|max:50',
-            'street_address' => 'required|string|max:255',
-            'city' => 'required|string|max:100',
-            'state' => 'nullable|string|max:100',
-            'zip_code' => 'nullable|string|max:20',
-            'payment_method' => 'required|string',
-            'address_id' => 'nullable|integer|exists:addresses,id',
-        ]);
+        // Conditional validation: if the user provides an existing address_id (saved address),
+        // shipping fields are not required. Otherwise require the shipping fields.
+        $rules = [
+            'first_name' => ['required_without:address_id', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
+            'phone' => ['required_without:address_id', 'string', 'max:50'],
+            'street_address' => ['required_without:address_id', 'string', 'max:255'],
+            'city' => ['required_without:address_id', 'string', 'max:100'],
+            'state' => ['nullable', 'string', 'max:100'],
+            'zip_code' => ['nullable', 'string', 'max:20'],
+            'payment_method' => ['required', 'string'],
+            // Ensure the address_id, if provided, exists and belongs to the current user
+            'address_id' => ['nullable', 'integer', Rule::exists('addresses', 'id')->where(function ($query) {
+                $query->where('user_id', Auth::id());
+            })],
+        ];
+
+        $data = $request->validate($rules);
 
         // Require auth for checkout
         if (!Auth::check()) {

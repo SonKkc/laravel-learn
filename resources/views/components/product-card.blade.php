@@ -29,7 +29,7 @@
                     <a href="#" class="content__card-author">{{ $product->brand->name ?? '' }}</a>
                     {{-- <time datetime="{{ $product->created_at }}" class="">{{ $product->created_at->format('F d, Y') }}</time> --}}
                     <span class="mx-0.5">·</span>
-                    <span class="text-main-red">{{ $product->price }} USD</span>
+                    <span class="text-main-red">{{ formatUSD($product->price) }}</span>
                 </p>
             </div>
         </div>

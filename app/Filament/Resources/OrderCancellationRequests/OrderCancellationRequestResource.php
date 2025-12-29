@@ -39,4 +39,16 @@ class OrderCancellationRequestResource extends Resource
             'view' => Pages\ViewOrderCancellationRequest::route('/{record}'),
         ];
     }
+
+    public static function getNavigationBadge(): ?string
+    {
+        $count = static::getModel()::where('status', 'requested')->count();
+        return $count ? (string) $count : null;
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        $count = static::getModel()::where('status', 'requested')->count();
+        return $count > 0 ? 'danger' : null;
+    }
 }

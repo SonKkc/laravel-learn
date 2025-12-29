@@ -75,7 +75,7 @@
                         <span class="inline-block rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">{{ $product->brand->name ?? 'Brand?' }}</span>
                     </div>
                     <div class="mb-4 flex items-center gap-4">
-                        <span class="text-main-red text-2xl font-bold">{{ number_format($product->price, 0, ',', '.') }} USD</span>
+                        <span class="text-main-red text-2xl font-bold">{{ formatUSD($product->price) }}</span>
                         @if ($product->on_sale)
                             <span class="rounded bg-green-500 px-2 py-1 text-xs text-white">On sale</span>
                         @endif

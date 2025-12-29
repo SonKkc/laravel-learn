@@ -21,7 +21,7 @@
                         </div>
                     </a>
                     <div class="flex items-center gap-2">
-                        <div class="text-sm text-gray-700 mr-2">{{ number_format($item['total'] ?? ($item['price'] * ($item['qty'] ?? 1)), 0, ',', '.') }}</div>
+                        <div class="text-sm text-gray-700 mr-2">{{ formatUSD($item['total'] ?? ($item['price'] * ($item['qty'] ?? 1))) }}</div>
                         <button type="button" onclick="window.cartPerformUpdate({ url: '{{ route('cart.update') }}', product_id: {{ $item['id'] }}, quantity: {{ max(($item['qty'] ?? 1) - 1, 0) }} })" class="inline-flex h-6 w-6 items-center justify-center rounded bg-gray-100 text-xs">−</button>
                         <button type="button" onclick="window.cartPerformUpdate({ url: '{{ route('cart.update') }}', product_id: {{ $item['id'] }}, quantity: {{ ($item['qty'] ?? 1) + 1 }} })" class="inline-flex h-6 w-6 items-center justify-center rounded bg-gray-100 text-xs">+</button>
                         <button type="button" onclick="window.cartPerformRemove({ url: '{{ route('cart.remove') }}', product_id: {{ $item['id'] }} })" class="inline-flex h-6 w-6 items-center justify-center rounded bg-red-500 text-xs text-white">✕</button>
@@ -30,9 +30,9 @@
             @endforeach
         </ul>
 
-        <div class="mt-4 flex items-center justify-between border-t pt-3">
+            <div class="mt-4 flex items-center justify-between border-t pt-3">
             <div class="text-sm text-gray-600">Total:</div>
-            <div class="text-base font-semibold">{{ number_format($subtotal, 0, ',', '.') }}</div>
+            <div class="text-base font-semibold">{{ formatUSD($subtotal) }}</div>
         </div>
 
         <div class="mt-3">

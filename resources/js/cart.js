@@ -183,6 +183,7 @@ window.addEventListener('storage', e => {
         if (payload && payload.cart) {
             renderFromPayload(payload.cart);
             setBadges(payload.count || 0);
+            try { syncCheckoutFromPayload(payload.cart); } catch (e) {}
             return;
         }
         // fallback: fetch server state
@@ -192,6 +193,7 @@ window.addEventListener('storage', e => {
                 if (data && data.success) {
                     renderFromPayload(data.cart);
                     setBadges(data.count || 0);
+                    try { syncCheckoutFromPayload(data.cart); } catch (e) {}
                 }
             }).catch(() => {});
     } catch (err) {
@@ -205,6 +207,7 @@ function reconcileServerData(data, successMsg) {
     if (data.cart) renderFromPayload(data.cart);
     if ((data.count || 0) === 0) showEmptyCartView();
     setBadges(data.count || 0);
+    try { syncCheckoutFromPayload(data.cart); } catch (e) {}
     try { broadcastCartUpdate(data); } catch (e) {}
     if (successMsg && window.showToast) window.showToast(successMsg);
     // refresh navbar dropdown preview if present
@@ -315,3 +318,103 @@ export async function cartPerformRemove(opts) {
 // keep globals for backwards compatibility
 window.cartPerformUpdate = cartPerformUpdate;
 window.cartPerformRemove = cartPerformRemove;
+
+// Sync checkout page's order-summary / aside using cart payload
+function syncCheckoutFromPayload(cartArray) {
+    try {
+        if (!cartArray) return;
+        const map = {};
+        if (Array.isArray(cartArray)) {
+            cartArray.forEach(it => { if (it && it.id != null) map[String(it.id)] = it; });
+        } else {
+            Object.keys(cartArray).forEach(k => { map[String(k)] = cartArray[k]; });
+        }
+
+        const aside = document.querySelector('aside .sticky') || document.querySelector('aside');
+        if (!aside) return;
+        const list = aside.querySelector('ul');
+        if (!list) return;
+
+        // Update existing rows and remove missing ones
+        let subtotal = 0;
+        const existingRows = Array.from(list.querySelectorAll('[data-product-id]'));
+        const seen = new Set();
+        existingRows.forEach(row => {
+            const id = row.getAttribute('data-product-id');
+            if (!id) return;
+            const item = map[String(id)];
+            if (!item) {
+                // removed on server
+                try { row.remove(); } catch (e) {}
+                return;
+            }
+            seen.add(String(id));
+            const qty = parseInt(item.qty || item.quantity || 0, 10) || 0;
+            const price = parseInt(item.price || 0, 10) || 0;
+            const line = parseInt(item.total || (price * qty), 10) || (price * qty);
+            subtotal += line;
+
+            // update attributes and displays
+            row.setAttribute('data-price', String(price));
+            const qtyEl = row.querySelector('[data-cart-qty]'); if (qtyEl) qtyEl.textContent = String(qty);
+            const qtyDisplay = row.querySelector('[data-cart-qty-display]'); if (qtyDisplay) qtyDisplay.textContent = String(qty);
+            const lineEl = row.querySelector('[data-cart-line-total]'); if (lineEl) lineEl.textContent = formatCurrency(line);
+        });
+
+        // Create missing rows (use same structure as server-rendered Blade)
+        Object.keys(map).forEach(id => {
+            if (seen.has(id)) return;
+            const it = map[id];
+            const qty = parseInt(it.qty || it.quantity || 0, 10) || 0;
+            const price = parseInt(it.price || 0, 10) || 0;
+            const line = parseInt(it.total || (price * qty), 10) || (price * qty);
+            subtotal += line;
+
+            const li = document.createElement('li');
+            li.setAttribute('data-product-id', String(it.id));
+            li.setAttribute('data-price', String(price));
+            li.className = 'flex items-center justify-between py-3';
+            li.innerHTML = `
+                <div class="flex min-w-0 items-center gap-3">
+                    ${(it.image) ? `<img src="${it.image}" class="h-12 w-12 rounded object-cover" alt="${(it.name||'')}">` : ''}
+                    <div class="min-w-0">
+                        <div class="truncate text-sm font-medium text-gray-900">${(it.name||'Product')}</div>
+                        <div class="text-xs text-gray-500">x<span data-cart-qty>${qty}</span></div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center rounded-md border overflow-hidden">
+                        <button type="button" onclick="window.cartPerformUpdate({ url: '/cart/update', product_id: ${it.id}, quantity: ${Math.max(qty-1,0)} })" class="px-3 py-1 bg-gray-100 text-sm" aria-label="Decrease quantity">−</button>
+                        <div class="px-4 py-1 text-sm" aria-live="polite" data-cart-qty-display>${qty}</div>
+                        <button type="button" onclick="window.cartPerformUpdate({ url: '/cart/update', product_id: ${it.id}, quantity: ${qty+1} })" class="px-3 py-1 bg-gray-100 text-sm" aria-label="Increase quantity">+</button>
+                    </div>
+                    <div class="text-sm font-semibold" data-cart-line-total>${formatCurrency(line)}</div>
+                    <button type="button" onclick="window.cartPerformRemove({ url: '/cart/remove', product_id: ${it.id} })" class="inline-flex items-center justify-center h-8 w-8 rounded bg-red-500 text-white" aria-label="Remove product">✕</button>
+                </div>
+            `;
+            list.appendChild(li);
+        });
+
+        // update subtotal display (prefer data-checkout-subtotal)
+        const subtotalEl = aside.querySelector('[data-checkout-subtotal]');
+        if (subtotalEl) {
+            subtotalEl.textContent = formatCurrency(subtotal);
+        } else {
+            // fallback: try to find nearby label and update sibling
+            const nodes = aside.querySelectorAll('div, span');
+            nodes.forEach(node => {
+                try {
+                    const txt = (node.textContent || '').trim();
+                    if (!txt) return;
+                    if (/Tạm tính|Subtotal|Tạm tính:/i.test(txt)) {
+                        const sibling = node.nextElementSibling;
+                        if (sibling) sibling.textContent = formatCurrency(subtotal);
+                    }
+                } catch (e) {}
+            });
+        }
+    } catch (e) {
+        // tolerate failures silently
+        console.error('syncCheckoutFromPayload error', e);
+    }
+}

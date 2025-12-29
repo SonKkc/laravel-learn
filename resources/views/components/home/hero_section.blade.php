@@ -39,7 +39,7 @@
                          <a href="#" class="hero__author-name">{{ $mainProduct->brand->name ?? '' }}</a>
                         {{-- <time datetime="{{ $mainProduct->created_at }}" class="">{{ $mainProduct->created_at->format('F d, Y') }}</time> --}}
                         <span class="mx-0.5">·</span>
-                        <span class="text-main-red">{{ $mainProduct->price }} USD</span>
+                        <span class="text-main-red">{{ formatUSD($mainProduct->price) }}</span>
                     </p>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                                     <span class="xl:inline lg:hidden text-[#6b7280]">
                                         <span class="mx-0.5">·</span>
                                         {{-- <time datetime="{{ $product->created_at }}" class="text-[#6b7280]">{{ $product->created_at->format('F d, Y') }}</time> --}}
-                                         <span class="text-main-red">{{ $mainProduct->price }} USD</span>
+                                         <span class="text-main-red">{{ formatUSD($product->price) }}</span>
                                     </span>
                                 </div>
                             </div>
