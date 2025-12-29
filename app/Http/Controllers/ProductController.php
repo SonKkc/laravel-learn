@@ -9,6 +9,17 @@ class ProductController extends Controller {
     public function index(Request $request) {
         $query = Product::with(['brand', 'category'])->where('is_active', true);
 
+        // Search
+        if ($request->filled('search')) {
+            $term = trim($request->search);
+            $query->where(function ($q) use ($term) {
+                $q->where('name', 'like', "%{$term}%")
+                  ->orWhere('description', 'like', "%{$term}%")
+                  ->orWhereHas('brand', fn($b) => $b->where('name', 'like', "%{$term}%"))
+                  ->orWhereHas('category', fn($c) => $c->where('name', 'like', "%{$term}%"));
+            });
+        }
+
         // Filter by category
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);

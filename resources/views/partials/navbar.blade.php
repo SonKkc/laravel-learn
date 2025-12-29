@@ -20,7 +20,7 @@
                 </div>
                 <!-- search-->
                 <div class="navbar__search flex items-center gap-2">
-                    <form action="/products" method="get" class="navbar__search-form hidden md:block">
+                    <form action="{{ route('products.index') }}" method="get" class="navbar__search-form hidden md:block">
                         <div class="navbar__search-icon-wrapper">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="navbar__search-icon">
                                 <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" />
@@ -134,7 +134,7 @@
         <nav class="border-b border-gray-300/60 bg-white" aria-label="Global" id="mobile-menu">
             <div class="space-y-1 px-2 pb-3 pt-2">
                 {{-- Mobile Search --}}
-                    <form action="/products" method="get" class="px-4 py-3">
+                    <form action="{{ route('products.index') }}" method="get" class="px-4 py-3">
                     <label for="mobile-search" class="sr-only">Search</label>
                     <div class="flex items-center gap-2">
                         <input id="mobile-search" name="search" placeholder="Search..." class="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 outline-none" />
