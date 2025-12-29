@@ -10,6 +10,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\OrderCancellationRequestController;
+use App\Http\Controllers\Admin\OrderCancellationController;
 
 
 // Home
@@ -46,6 +48,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
 	Route::get('/my-order', [OrderController::class, 'myOrders'])->name('orders.my');
 	Route::get('/my-order/{order}', [OrderController::class, 'show'])->name('orders.show');
+	// User: submit an order cancellation request
+	Route::post('/my-order/{order}/cancellation-requests', [OrderCancellationRequestController::class, 'store'])->name('orders.cancellations.store');
 });
 
 // Auth
@@ -59,5 +63,12 @@ Route::get('/success', [CheckoutController::class, 'success'])->name('checkout.s
 Route::get('/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
 
 // User Profile
+// Admin routes (cancellation approvals)
+Route::prefix('admin')->middleware(['auth','can:access-admin'])->group(function () {
+	// Admin cancellation actions (Filament provides the admin UI)
+	Route::patch('/cancellation-requests/{request}/approve', [OrderCancellationController::class, 'approve'])->name('admin.cancellations.approve');
+	Route::patch('/cancellation-requests/{request}/reject', [OrderCancellationController::class, 'reject'])->name('admin.cancellations.reject');
+});
+
 Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile.show');
 Route::put('/profile', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');

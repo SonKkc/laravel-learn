@@ -90,7 +90,7 @@
                                                     <div class="font-medium">Order #{{ $order->id }}</div>
                                                     <div class="text-sm text-gray-600">{{ $order->created_at->format('Y-m-d H:i') }}</div>
                                             </div>
-                                            <div class="text-sm text-gray-700">{{ strtoupper($order->status) }}</div>
+                                            <div class="text-sm text-gray-700">@include('partials.order-status', ['status' => $order->status])</div>
                                         </div>
                                             <div class="mt-3 text-sm text-gray-600">
                                             <div>Total: {{ number_format($order->grand_total ?? $order->total ?? 0, 0, ',', '.') }} USD</div>

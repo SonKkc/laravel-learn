@@ -38,20 +38,27 @@ class LatestOrders extends TableWidget
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'new' => 'info',
+                        'requesting' => 'primary',
                         'processing' => 'primary',
                         'shipped' => 'warning',
                         'delivered' => 'success',
                         'canceled' => 'danger',
+                        'cancelled' => 'danger',
+                        default => 'secondary',
                     })
                     ->icon(fn(string $state): string => match ($state) {
                         'new' => 'heroicon-o-plus-circle',
+                        'requesting' => 'heroicon-o-clock',
                         'processing' => 'heroicon-o-cog',
                         'shipped' => 'heroicon-o-truck',
                         'delivered' => 'heroicon-o-check-circle',
                         'canceled' => 'heroicon-o-x-circle',
+                        'cancelled' => 'heroicon-o-x-circle',
+                        default => 'heroicon-o-question-mark-circle',
                     })
                     ->sortable(),
                 TextColumn::make('payment_method')
+                    ->formatStateUsing(fn($state) => is_string($state) && strtolower($state) === 'cod' ? 'COD' : $state)
                     ->searchable(),
                 TextColumn::make('payment_status')
                     ->badge()

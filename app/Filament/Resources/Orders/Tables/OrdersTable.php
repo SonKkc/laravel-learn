@@ -27,6 +27,7 @@ class OrdersTable
                     ->sortable()
                     ->money('USD'),
                 TextColumn::make('payment_method')
+                    ->formatStateUsing(fn($state) => is_string($state) && strtolower($state) === 'cod' ? 'COD' : $state)
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('payment_status')
@@ -38,14 +39,19 @@ class OrdersTable
                 TextColumn::make('shipping_method')
                     ->searchable()
                     ->sortable(),
-                SelectColumn::make('status')
-                    ->options([
-                        'new' => 'New',
-                        'processing' => 'Processing',
-                        'shipped' => 'Shipped',
-                        'delivered' => 'Delivered',
-                        'cancelled' => 'Cancelled',
-                    ])
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'new' => 'info',
+                        'requesting' => 'primary',
+                        'processing' => 'primary',
+                        'shipped' => 'warning',
+                        'delivered' => 'success',
+                        'canceled' => 'danger',
+                        'cancelled' => 'danger',
+                        default => 'secondary',
+                    })
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('created_at')

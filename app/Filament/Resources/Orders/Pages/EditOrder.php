@@ -18,4 +18,17 @@ class EditOrder extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    /**
+     * Prevent changing status away from 'requesting' in the admin edit view.
+     */
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        // if the current record is requesting, force the status back to requesting
+        if ($this->record && $this->record->status === 'requesting') {
+            $data['status'] = 'requesting';
+        }
+
+        return $data;
+    }
 }

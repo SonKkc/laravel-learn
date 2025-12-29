@@ -18,6 +18,9 @@ class OrderStats extends StatsOverviewWidget
             Stat::make('Processing', Order::query()->where('status', 'processing')->count())
                 ->description('Orders being processed')
                 ->color('warning'),
+            Stat::make('Requesting', Order::query()->where('status', 'requesting')->count())
+                ->description('Orders with cancellation requested')
+                ->color('primary'),
             Stat::make('Shipped', Order::query()->where('status', 'shipped')->count())
                 ->description('Orders that have been shipped')
                 ->color('info'),
@@ -27,7 +30,7 @@ class OrderStats extends StatsOverviewWidget
             Stat::make('Cancelled', Order::query()->where('status', 'cancelled')->count())
                 ->description('Orders that were cancelled')
                 ->color('danger'),
-            Stat::make('Average Value', Number::currency(Order::query()->avg('grand_total')), 'USD')
+            Stat::make('Average Value', Number::currency(Order::query()->avg('grand_total'), 'USD'))
                 ->description('Average value of all orders')
                 ->color('secondary'),
         ];

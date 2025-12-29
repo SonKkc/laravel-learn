@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\OrderCancellationRequest;
 
 class Order extends Model
 {
@@ -34,5 +35,10 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function cancellationRequests()
+    {
+        return $this->hasMany(OrderCancellationRequest::class);
     }
 }

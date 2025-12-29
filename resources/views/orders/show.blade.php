@@ -19,7 +19,7 @@
                         <div class="text-right">
                             <div class="text-base font-semibold">{{ number_format($order->grand_total ?? $order->total ?? 0, 0, ',', '.') }} USD</div>
                             <div class="mt-2">
-                                <span class="inline-block px-2 py-1 rounded-full text-xs font-medium {{ $order->status === 'completed' ? 'bg-green-100 text-green-700' : ($order->status === 'processing' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700') }}">{{ ucfirst($order->status) }}</span>
+                                @include('partials.order-status', ['status' => $order->status])
                             </div>
                         </div>
                     </div>
@@ -92,6 +92,11 @@
                             <div>Total</div>
                             <div>{{ number_format($order->grand_total ?? $order->total ?? 0, 0, ',', '.') }} USD</div>
                         </div>
+                        @can('requestCancellation', $order)
+                            <div class="mt-4">
+                                <button id="openCancellationModal" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-3 rounded">Request cancellation</button>
+                            </div>
+                        @endcan
                     </div>
                 </div>
             </aside>
@@ -99,4 +104,159 @@
     </div>
 </section>
 @endsection
+
+@push('modals')
+    <div id="cancellationModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden">
+        <div class="w-full max-w-lg bg-white rounded shadow p-6">
+            <h3 class="text-lg font-medium mb-3">Request order cancellation</h3>
+            <p class="text-sm text-gray-600 mb-4">Please provide a reason for the cancellation. Our team will review and contact you.</p>
+            <textarea id="cancellationReason" class="w-full border rounded p-2 mb-4" rows="4" placeholder="Reason for cancellation..."></textarea>
+            <div class="flex justify-end gap-2">
+                <button id="cancelClose" class="px-4 py-2 rounded border">Close</button>
+                <button id="submitCancellation" class="px-4 py-2 rounded bg-red-600 text-white">Submit request</button>
+            </div>
+        </div>
+    </div>
+@endpush
+
+@push('scripts')
+    <script>
+        (() => {
+            const openBtn = document.getElementById('openCancellationModal');
+            const submitBtn = document.getElementById('submitCancellation');
+
+            console.log('cancellation script init', { openBtn: !!openBtn, submitBtn: !!submitBtn, orderId: {{ $order->id }} });
+
+            function getModal() { return document.getElementById('cancellationModal'); }
+            function getCloseBtn() { return document.getElementById('cancelClose'); }
+
+            // If the direct listener wasn't attached (e.g., DOM changes, turbolinks), use delegated handler as fallback
+            document.addEventListener('click', (e) => {
+                const target = e.target;
+                if (target && target.closest && target.closest('#openCancellationModal')) {
+                    console.log('openCancellationModal clicked via delegation for order', {{ $order->id }});
+                    const modal = getModal();
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        console.log('modal classList after remove hidden:', modal.className);
+                        console.log('modal computed display:', window.getComputedStyle(modal).display);
+                        if (window.getComputedStyle(modal).display === 'none') {
+                            console.warn('modal still has display:none — forcing inline display:flex');
+                            modal.style.display = 'flex';
+                        }
+                    }
+                }
+                if (target && target.closest && target.closest('#cancelClose')) {
+                    console.log('cancellationModal closed via delegation for order', {{ $order->id }});
+                    const modal = getModal();
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        // also clear inline style if present
+                        modal.style.display = '';
+                    }
+                }
+            });
+
+            // Do not bail out early — the modal element may be injected later by Blade stacks.
+
+            // Attach direct listeners if elements are present now
+            const modalNow = getModal();
+            if (openBtn && modalNow) {
+                openBtn.addEventListener('click', () => {
+                    console.log('openCancellationModal clicked - opening modal for order', {{ $order->id }});
+                    const modal = getModal();
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        console.log('modal classList after remove hidden:', modal.className);
+                        console.log('modal computed display:', window.getComputedStyle(modal).display);
+                        if (window.getComputedStyle(modal).display === 'none') {
+                            console.warn('modal still has display:none — forcing inline display:flex');
+                            modal.style.display = 'flex';
+                        }
+                    }
+                });
+            }
+
+            const closeNow = getCloseBtn();
+            if (closeNow) {
+                closeNow.addEventListener('click', () => {
+                    console.log('cancellationModal closed (cancel) for order', {{ $order->id }});
+                    const modal = getModal();
+                    if (modal) modal.classList.add('hidden');
+                });
+            }
+
+            function attachSubmitHandler(element) {
+                if (!element) return;
+                element.addEventListener('click', async () => {
+                    element.disabled = true;
+                    const reasonEl = document.getElementById('cancellationReason');
+                    const reason = reasonEl ? reasonEl.value.trim() : '';
+                    if (!reason) {
+                        alert('Please enter a reason for cancellation.');
+                        element.disabled = false;
+                        return;
+                    }
+
+                    try {
+                        const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+                        const token = tokenMeta ? tokenMeta.getAttribute('content') : '';
+                        const url = "{{ route('orders.cancellations.store', ['order' => $order->id]) }}";
+                        const payload = { reason };
+                        console.log('Submitting cancellation request', { orderId: {{ $order->id }}, url, tokenPresent: !!token, payload });
+
+                        const resp = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': token,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify(payload)
+                        });
+
+                        console.log('Request finished, status:', resp.status);
+                        const json = await resp.json().catch(() => ({}));
+                        console.log('Response body:', json);
+
+                        if (!resp.ok) {
+                            console.error('Cancellation request failed', resp.status, json);
+                            alert(json.message || 'Failed to submit request');
+                            element.disabled = false;
+                            return;
+                        }
+
+                        console.log('Cancellation request success', json);
+                        alert('Cancellation request submitted. We will review it shortly.');
+                        const modal = getModal();
+                        if (modal) modal.classList.add('hidden');
+                        // Optionally refresh page to update UI
+                        location.reload();
+                    } catch (err) {
+                        console.error('Error while submitting cancellation request:', err);
+                        alert('An error occurred. Please try again later.');
+                        element.disabled = false;
+                    }
+                });
+            }
+
+            // Attach now if present, otherwise poll briefly for the modal-inserted button
+            if (submitBtn) {
+                attachSubmitHandler(submitBtn);
+            } else {
+                const poll = setInterval(() => {
+                    const s = document.getElementById('submitCancellation');
+                    if (s) {
+                        clearInterval(poll);
+                        attachSubmitHandler(s);
+                    }
+                }, 200);
+                // stop polling after 5s
+                setTimeout(() => clearInterval(poll), 5000);
+            }
+
+            // Quick-cancel removed: use the modal-trigger button only.
+        })();
+    </script>
+@endpush
 

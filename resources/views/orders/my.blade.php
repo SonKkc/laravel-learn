@@ -20,7 +20,7 @@
                         </div>
 
                         <div class="flex items-center gap-4">
-                            <span class="inline-block px-2 py-1 rounded-full text-xs font-medium {{ $order->status === 'completed' ? 'bg-green-100 text-green-700' : ($order->status === 'processing' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700') }}">{{ ucfirst($order->status) }}</span>
+                            @include('partials.order-status', ['status' => $order->status])
                             <a href="{{ route('orders.show', $order) }}" class="inline-flex items-center gap-2 text-main-red hover:underline">View details
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L13.586 11H4a1 1 0 110-2h9.586l-3.293-3.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
                             </a>
