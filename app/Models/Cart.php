@@ -22,9 +22,9 @@ class Cart extends Model
             $out[$product->id] = [
                 'id' => $product->id,
                 'name' => $product->name,
-                'qty' => (int) $it->qty,
+                'quantity' => (int) $it->quantity,
                 'price' => (float) $it->price,
-                'total' => (float) $it->price * (int) $it->qty,
+                'total' => (float) $it->price * (int) $it->quantity,
                 'image' => is_array($product->images) && count($product->images) ? $product->images[0] : null,
             ];
         }

@@ -69,7 +69,7 @@ class CheckoutController extends Controller
         // compute totals server-side
         $subtotal = 0;
         foreach ($cart as $it) {
-            $subtotal += ($it['total'] ?? ($it['price'] * ($it['qty'] ?? 1)));
+            $subtotal += ($it['total'] ?? ($it['price'] * ($it['quantity'] ?? 1)));
         }
 
         $shipping = 0; // MVP: flat 0 or implement later
@@ -93,7 +93,7 @@ class CheckoutController extends Controller
                 // For each cart item, lock product row and verify + decrement stock
                 foreach ($cart as $it) {
                     $id = (int)$it['id'];
-                    $qty = (int)($it['qty'] ?? 1);
+                    $qty = (int)($it['quantity'] ?? 1);
 
                     $product = Product::where('id', $id)->lockForUpdate()->first();
                     if (!$product) {

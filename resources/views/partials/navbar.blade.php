@@ -41,7 +41,7 @@
                                             $cartModel = \App\Models\Cart::firstOrCreate(['user_id' => Auth::id()]);
                                             $cartArr = $cartModel->toArrayPayload();
                                             foreach ($cartArr as $it) {
-                                                $cartCount += isset($it['qty']) ? (int) $it['qty'] : 1;
+                                                $cartCount += isset($it['quantity']) ? (int) $it['quantity'] : 1;
                                             }
                                         } catch (\Exception $e) {
                                             $cartCount = 0;
@@ -50,7 +50,7 @@
                                         $cart = session('cart', []);
                                         if (!empty($cart) && is_array($cart)) {
                                             foreach ($cart as $it) {
-                                                $cartCount += isset($it['qty']) ? (int) $it['qty'] : 1;
+                                                $cartCount += isset($it['quantity']) ? (int) $it['quantity'] : 1;
                                             }
                                         }
                                     }
@@ -185,7 +185,7 @@
                             $cartModel = \App\Models\Cart::firstOrCreate(['user_id' => Auth::id()]);
                             $cartArr = $cartModel->toArrayPayload();
                             foreach ($cartArr as $it) {
-                                $cartMobileCount += isset($it['qty']) ? (int) $it['qty'] : 1;
+                                $cartMobileCount += isset($it['quantity']) ? (int) $it['quantity'] : 1;
                             }
                         } catch (\Exception $e) {
                             $cartMobileCount = 0;
@@ -194,7 +194,7 @@
                         $cartMobile = session('cart', []);
                         if (!empty($cartMobile) && is_array($cartMobile)) {
                             foreach ($cartMobile as $it) {
-                                $cartMobileCount += isset($it['qty']) ? (int) $it['qty'] : 1;
+                                $cartMobileCount += isset($it['quantity']) ? (int) $it['quantity'] : 1;
                             }
                         }
                     }

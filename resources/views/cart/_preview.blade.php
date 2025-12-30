@@ -5,7 +5,7 @@
         <ul class="divide-y">
             @php $subtotal = 0; @endphp
             @foreach($cart as $item)
-                @php $subtotal += ($item['total'] ?? ($item['price'] * ($item['qty'] ?? 1))); @endphp
+                @php $subtotal += ($item['total'] ?? ($item['price'] * ($item['quantity'] ?? 1))); @endphp
                 <li class="flex items-center justify-between py-2">
                     <a href="{{ route('products.show', $item['id']) }}" class="flex min-w-0 items-center gap-3 text-sm text-gray-900 hover:underline">
                         @if(!empty($item['image']))
@@ -17,13 +17,13 @@
                         @endif
                         <div class="min-w-0">
                             <div class="truncate font-medium">{{ $item['name'] ?? 'Product' }}</div>
-                            <div class="text-xs text-gray-500">x<span class="cart-item-qty">{{ $item['qty'] ?? 1 }}</span></div>
+                            <div class="text-xs text-gray-500">x<span class="cart-item-qty">{{ $item['quantity'] ?? 1 }}</span></div>
                         </div>
                     </a>
                     <div class="flex items-center gap-2">
-                        <div class="text-sm text-gray-700 mr-2">{{ formatUSD($item['total'] ?? ($item['price'] * ($item['qty'] ?? 1))) }}</div>
-                        <button type="button" onclick="window.cartPerformUpdate({ url: '{{ route('cart.update') }}', product_id: {{ $item['id'] }}, quantity: {{ max(($item['qty'] ?? 1) - 1, 0) }} })" class="inline-flex h-6 w-6 items-center justify-center rounded bg-gray-100 text-xs">−</button>
-                        <button type="button" onclick="window.cartPerformUpdate({ url: '{{ route('cart.update') }}', product_id: {{ $item['id'] }}, quantity: {{ ($item['qty'] ?? 1) + 1 }} })" class="inline-flex h-6 w-6 items-center justify-center rounded bg-gray-100 text-xs">+</button>
+                        <div class="text-sm text-gray-700 mr-2">{{ formatUSD($item['total'] ?? ($item['price'] * ($item['quantity'] ?? 1))) }}</div>
+                        <button type="button" onclick="window.cartPerformUpdate({ url: '{{ route('cart.update') }}', product_id: {{ $item['id'] }}, quantity: {{ max(($item['quantity'] ?? 1) - 1, 0) }} })" class="inline-flex h-6 w-6 items-center justify-center rounded bg-gray-100 text-xs">−</button>
+                        <button type="button" onclick="window.cartPerformUpdate({ url: '{{ route('cart.update') }}', product_id: {{ $item['id'] }}, quantity: {{ ($item['quantity'] ?? 1) + 1 }} })" class="inline-flex h-6 w-6 items-center justify-center rounded bg-gray-100 text-xs">+</button>
                         <button type="button" onclick="window.cartPerformRemove({ url: '{{ route('cart.remove') }}', product_id: {{ $item['id'] }} })" class="inline-flex h-6 w-6 items-center justify-center rounded bg-red-500 text-xs text-white">✕</button>
                     </div>
                 </li>

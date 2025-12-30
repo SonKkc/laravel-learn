@@ -45,7 +45,6 @@ class OrderForm
                 ToggleButtons::make('status')
                     ->options([
                         'new' => 'New',
-                        'requesting' => 'Requesting',
                         'processing' => 'Processing',
                         'shipped' => 'Shipped',
                         'delivered' => 'Delivered',
@@ -53,7 +52,6 @@ class OrderForm
                     ])
                     ->colors([
                         'new' => 'info',
-                        'requesting' => 'primary',
                         'processing' => 'primary',
                         'shipped' => 'warning',
                         'delivered' => 'success',

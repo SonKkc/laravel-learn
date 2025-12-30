@@ -20,7 +20,7 @@
                                 @php $subtotal = 0; @endphp
                                 @foreach ($items as $item)
                                     @php
-                                        $qty = $item['qty'] ?? 1;
+                                        $qty = $item['quantity'] ?? 1;
                                         $lineTotal = $item['total'] ?? $item['price'] * $qty;
                                         $subtotal += $lineTotal;
                                         $img = $item['image'] ?? '';

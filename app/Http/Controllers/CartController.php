@@ -31,7 +31,7 @@ class CartController extends Controller {
             $cart = $request->session()->get('cart', []);
         }
 
-        // cart expected format: array of items with keys: id, name, qty, price, total
+        // cart expected format: array of items with keys: id, name, quantity, price, total
         return view('cart._preview', compact('cart'));
     }
 
@@ -52,7 +52,7 @@ class CartController extends Controller {
         if (Auth::check()) {
             $cartModel = Cart::firstOrCreate(['user_id' => Auth::id()]);
             $item = CartItem::firstOrNew(['cart_id' => $cartModel->id, 'product_id' => $product->id]);
-            $item->qty = ($item->exists ? $item->qty : 0) + $data['quantity'];
+            $item->quantity = ($item->exists ? $item->quantity : 0) + $data['quantity'];
             $item->price = $product->price;
             $item->save();
 
@@ -61,13 +61,13 @@ class CartController extends Controller {
             $cart = $request->session()->get('cart', []);
             $id = (int) $product->id;
             if (isset($cart[$id])) {
-                $cart[$id]['qty'] = ($cart[$id]['qty'] ?? 0) + $data['quantity'];
-                $cart[$id]['total'] = $cart[$id]['qty'] * $cart[$id]['price'];
+                $cart[$id]['quantity'] = ($cart[$id]['quantity'] ?? 0) + $data['quantity'];
+                $cart[$id]['total'] = $cart[$id]['quantity'] * $cart[$id]['price'];
             } else {
                 $cart[$id] = [
                     'id' => $id,
                     'name' => $product->name,
-                    'qty' => $data['quantity'],
+                    'quantity' => $data['quantity'],
                     'price' => $product->price,
                     'total' => $product->price * $data['quantity'],
                     'image' => is_array($product->images) && count($product->images) ? $product->images[0] : null,
@@ -105,7 +105,7 @@ class CartController extends Controller {
                 if ((int)$data['quantity'] <= 0) {
                     $item->delete();
                 } else {
-                    $item->qty = (int)$data['quantity'];
+                    $item->quantity = (int)$data['quantity'];
                     $item->save();
                 }
             }
@@ -116,9 +116,9 @@ class CartController extends Controller {
             if (isset($cart[$id])) {
                 if ((int)$data['quantity'] <= 0) {
                     unset($cart[$id]);
-                } else {
-                    $cart[$id]['qty'] = (int)$data['quantity'];
-                    $cart[$id]['total'] = $cart[$id]['qty'] * $cart[$id]['price'];
+                    } else {
+                    $cart[$id]['quantity'] = (int)$data['quantity'];
+                    $cart[$id]['total'] = $cart[$id]['quantity'] * $cart[$id]['price'];
                 }
                 $request->session()->put('cart', $cart);
             }
@@ -126,7 +126,7 @@ class CartController extends Controller {
 
         if ($request->wantsJson() || $request->ajax()) {
             $preview = view('cart._preview', ['cart' => $cart])->render();
-            $count = array_reduce($cart, function ($s, $it) { return $s + (($it['qty'] ?? 1)); }, 0);
+            $count = array_reduce($cart, function ($s, $it) { return $s + (($it['quantity'] ?? 1)); }, 0);
             return response()->json(['success' => true, 'html' => $preview, 'count' => $count, 'cart' => $cart]);
         }
 
@@ -159,7 +159,7 @@ class CartController extends Controller {
 
         if ($request->wantsJson() || $request->ajax()) {
             $preview = view('cart._preview', ['cart' => $cart])->render();
-            $count = array_reduce($cart, function ($s, $it) { return $s + (($it['qty'] ?? 1)); }, 0);
+            $count = array_reduce($cart, function ($s, $it) { return $s + (($it['quantity'] ?? 1)); }, 0);
             return response()->json(['success' => true, 'html' => $preview, 'count' => $count, 'cart' => $cart]);
         }
 
@@ -178,7 +178,7 @@ class CartController extends Controller {
             $cart = $request->session()->get('cart', []);
         }
 
-        $count = array_reduce($cart, function ($s, $it) { return $s + (($it['qty'] ?? 1)); }, 0);
+        $count = array_reduce($cart, function ($s, $it) { return $s + (($it['quantity'] ?? 1)); }, 0);
         return response()->json(['success' => true, 'cart' => $cart, 'count' => $count]);
     }
 }
