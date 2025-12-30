@@ -67,7 +67,7 @@
                     @endphp
 
                     <div class="mb-4">
-                        <nav class="flex gap-2 overflow-auto">
+                        <nav class="flex gap-2 flex-wrap">
                             @foreach($tabs as $key => $label)
                                 @php $count = ($statusCounts[$key] ?? ($key === 'all' ? array_sum($statusCounts ?? []) : 0)); @endphp
                                 @php $activeStatus = $status ?? request('status','all'); @endphp

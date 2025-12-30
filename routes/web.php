@@ -33,7 +33,7 @@ Route::post('/cart/update', [CartController::class, 'update'])->name('cart.updat
 Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 Route::get('/cart/json', [CartController::class, 'json'])->name('cart.json');
 
-// Checkout (require auth for checkout actions)
+// Checkout
 Route::middleware('auth')->group(function () {
 	Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 	Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
@@ -44,7 +44,7 @@ Route::middleware('auth')->group(function () {
 	Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
 });
 
-// My Orders (require authentication)
+// My Orders
 Route::middleware('auth')->group(function () {
 	Route::get('/my-order', [OrderController::class, 'myOrders'])->name('orders.my');
 	Route::get('/my-order/{order}', [OrderController::class, 'show'])->name('orders.show');
@@ -67,12 +67,6 @@ Route::get('/success', [CheckoutController::class, 'success'])->name('checkout.s
 Route::get('/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
 
 // User Profile
-// Admin routes (cancellation approvals)
-Route::prefix('admin')->middleware(['auth','can:access-admin'])->group(function () {
-	// Admin cancellation actions (Filament provides the admin UI)
-	Route::patch('/cancellation-requests/{request}/approve', [OrderCancellationController::class, 'approve'])->name('admin.cancellations.approve');
-	Route::patch('/cancellation-requests/{request}/reject', [OrderCancellationController::class, 'reject'])->name('admin.cancellations.reject');
-});
 
 Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile.show');
 Route::put('/profile', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');

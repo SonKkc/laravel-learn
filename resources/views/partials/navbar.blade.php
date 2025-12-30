@@ -1,22 +1,24 @@
-<header class="navbar fixed left-0 top-0 z-50 w-full bg-white shadow">
+<header class="sticky top-0 z-50 w-full bg-white/90 shadow">
     <div class="navbar__border">
         <nav class="navbar__nav">
             <div class="navbar__container">
-                <!--Logo-->
-                <div class="navbar__logo">
-                    <a href="/" class="block h-10 w-10 lg:hidden">
-                        <img alt="Logo" loading="lazy" width="40" height="40" decoding="async" class="h-full w-full object-cover" style="color:transparent" src="https://banter.tailawesome.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fbanter-icon-logo.67916a2e.png&w=256&q=75">
-                    </a>
-                    <a href="/" class="navbar__logo-link hidden lg:block">
-                        <img src="https://banter.tailawesome.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fbanter-logo.7f46be36.png&w=360&q=75" alt="Logo" class="navbar__logo-image">
-                    </a>
-                </div>
-                <!--Nav item-->
-                <div class="navbar__menu">
-                    <a href="{{ route('categories.index') }}" class="navbar__menu-item">Categories</a>
-                    <a href="{{ route('products.index') }}" class="navbar__menu-item">Products</a>
-                    <a href="{{ route('cart.index') }}" class="navbar__menu-item">Cart</a>
-                    <a href="{{ route('orders.my') }}" class="navbar__menu-item">My Orders</a>
+                <div class="flex items-center gap-3">
+                    <!--Logo-->
+                    <div class="navbar__logo">
+                        <a href="/" class="block h-10 w-10 lg:hidden">
+                            <img alt="Logo" loading="lazy" width="40" height="40" decoding="async" class="h-full w-full object-cover" style="color:transparent" src="https://banter.tailawesome.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fbanter-icon-logo.67916a2e.png&w=256&q=75">
+                        </a>
+                        <a href="/" class="navbar__logo-link hidden lg:block">
+                            <img src="https://banter.tailawesome.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fbanter-logo.7f46be36.png&w=360&q=75" alt="Logo" class="navbar__logo-image">
+                        </a>
+                    </div>
+                    <!--Nav item-->
+                    <div class="navbar__menu">
+                        <a href="{{ route('categories.index') }}" class="navbar__menu-item">Categories</a>
+                        <a href="{{ route('products.index') }}" class="navbar__menu-item">Products</a>
+                        <a href="{{ route('cart.index') }}" class="navbar__menu-item">Cart</a>
+                        <a href="{{ route('orders.my') }}" class="navbar__menu-item">My Orders</a>
+                    </div>
                 </div>
                 <!-- search-->
                 <div class="navbar__search flex items-center gap-2">
@@ -67,7 +69,7 @@
                                     </svg>
                                     <span class="sr-only">Open cart</span>
                                 </button>
-                                <div x-show="open" x-transition class="absolute right-0 z-50 mt-2 w-80 max-w-xs origin-top-right rounded-xl bg-white py-2 shadow-xl ring-1 ring-black/10" @click.away="open = false">
+                                <div x-show="open" x-transition class="absolute -right-16 md:right-0 z-50 mt-2 w-80 max-w-xs origin-top-right rounded-xl bg-white py-2 shadow-xl ring-1 ring-black/10" @click.away="open = false">
                                     <div x-show="loading" class="p-4 text-sm text-gray-500">Loading...</div>
                                     <div x-html="html"></div>
                                     <div x-show="!loading && html === ''" class="p-4 text-sm text-gray-500">Your cart is empty.</div>

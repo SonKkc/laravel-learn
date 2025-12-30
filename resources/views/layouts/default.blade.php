@@ -25,7 +25,7 @@
 <body class="flex min-h-dvh flex-col flex-wrap">
     @include('partials.navbar')
 
-    <main class="main">
+    <main class="main lg:pt-[80px]">
         @yield('content')
     </main>
 

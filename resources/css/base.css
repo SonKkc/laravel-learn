@@ -67,7 +67,7 @@ body {
     @apply relative z-10 border-b border-[#d1d5db99];
 }
 .navbar__nav {
-    @apply lg:max-w-[1536px] max-w-2xl h-20 flex mx-auto items-center bg-white px-[2rem] sm:px-[1rem];
+    @apply lg:max-w-[1536px] max-w-2xl h-20 flex mx-auto items-center px-[2rem] sm:px-[1rem];
 }
 .navbar__container {
     @apply flex w-full items-center justify-between;
@@ -215,7 +215,7 @@ body {
     @apply lg:max-w-[1536px] lg:flex lg:px-8 sm:px-6 px-4 max-w-[42rem] lg:items-start mx-auto;
 }
 .hero__main-content {
-    @apply lg:sticky lg:w-1/2 lg:top-[2rem] relative;
+    @apply lg:sticky lg:w-1/2 lg:top-[5rem] relative;
 }
 .hero__thumbnail {
     @apply overflow-hidden rounded-2xl block relative aspect-[16/9];
